@@ -61,9 +61,9 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
     Dialog selectCoinDialog;
     Button setAlertButton;
     String selectedSymbol;
-    //EditText puEditText, pdEditText;
     TextView alertRLSymbolTextView, alertRLNameTextView, alertRLPriceTextView, alertRL24PercentTextView;
     ProgressBar loadingPB;
+    boolean isLongAlarm;
     float userValue;
 
     CheckBox longAlarmCheckbox;
@@ -86,7 +86,7 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
     ArrayList<CurrencyRVModel> currencyRVModelArrayList;
 
     //Declare SharedPref variables
-    SharedPreferences pref, prefUserValue, prefNotify, prefAlertTypeCode, isLongAlarm;
+    SharedPreferences pref, prefUserValue, prefNotify, prefAlertTypeCode, prefisLongAlarm;
 
     static DecimalFormat df2 = new DecimalFormat("#.##");
 
@@ -105,7 +105,7 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
         prefUserValue = this.getActivity().getSharedPreferences("userValue", Context.MODE_PRIVATE);
         prefNotify = this.getActivity().getSharedPreferences("isNotified", Context.MODE_PRIVATE);
         prefAlertTypeCode = this.getActivity().getSharedPreferences("alertTypeCode", Context.MODE_PRIVATE);
-        isLongAlarm = this.getActivity().getSharedPreferences("isLongAlarm", Context.MODE_PRIVATE);
+        prefisLongAlarm = this.getActivity().getSharedPreferences("isLongAlarm", Context.MODE_PRIVATE);
 
 
 
@@ -133,8 +133,11 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
         alertRLPriceTextView = view.findViewById(R.id.alerRLPriceTextView);
         alertRL24PercentTextView = view.findViewById(R.id.alertRL24PercentTextView);
 
+        //Set Long Alarm Checkbox status
+        isLongAlarm = prefisLongAlarm.getBoolean("isLongAlarm", false);
+        longAlarmCheckbox.setChecked(isLongAlarm);
 
-
+        
 
 
 
@@ -152,7 +155,7 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                isLongAlarm.edit().putBoolean("isLongAlarm", b).apply();
+                prefisLongAlarm.edit().putBoolean("isLongAlarm", b).apply();
 
                 //Log.i("Long Alarm", String.valueOf(b));
 

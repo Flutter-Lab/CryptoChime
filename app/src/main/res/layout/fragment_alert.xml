@@ -52,22 +52,22 @@
                 android:id="@+id/longAlarmCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loud Alarm"
                 android:layout_centerHorizontal="true"
+                android:text="Loud Alarm"
 
 
                 />
 
-<!--            <CheckBox-->
-<!--                android:id="@+id/onlyNotifyCheckBox"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignRight="@id/longAlarmCheckBox"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_marginRight="30dp"-->
-<!--                android:text="Only Notify"-->
+            <!--            <CheckBox-->
+            <!--                android:id="@+id/onlyNotifyCheckBox"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_alignRight="@id/longAlarmCheckBox"-->
+            <!--                android:layout_alignParentRight="true"-->
+            <!--                android:layout_marginRight="30dp"-->
+            <!--                android:text="Only Notify"-->
 
-<!--                />-->
+            <!--                />-->
 
             <RelativeLayout
                 android:id="@+id/coinInfoBlock"
@@ -146,61 +146,61 @@
                 />
 
 
-<!--            <TextView-->
-<!--                android:id="@+id/percentUpTV"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/valueEditText"-->
-<!--                android:layout_marginLeft="30dp"-->
-<!--                android:layout_marginTop="30dp"-->
-<!--                android:paddingVertical="10dp"-->
-<!--                android:text="Percentage Up"-->
-<!--                android:textSize="16sp" />-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/percentUpTV"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@id/valueEditText"-->
+            <!--                android:layout_marginLeft="30dp"-->
+            <!--                android:layout_marginTop="30dp"-->
+            <!--                android:paddingVertical="10dp"-->
+            <!--                android:text="Percentage Up"-->
+            <!--                android:textSize="16sp" />-->
 
-<!--            <EditText-->
-<!--                android:id="@+id/puEdtTxt"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/valueEditText"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_marginTop="30dp"-->
-<!--                android:layout_marginRight="50dp"-->
-<!--                android:digits="0123456789."-->
-<!--                android:hint="0.00%"-->
-<!--                android:inputType="number"-->
-<!--                android:maxLength="4"-->
-<!--                android:singleLine="true"-->
-<!--                android:textSize="16sp"-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/puEdtTxt"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@id/valueEditText"-->
+            <!--                android:layout_alignParentRight="true"-->
+            <!--                android:layout_marginTop="30dp"-->
+            <!--                android:layout_marginRight="50dp"-->
+            <!--                android:digits="0123456789."-->
+            <!--                android:hint="0.00%"-->
+            <!--                android:inputType="number"-->
+            <!--                android:maxLength="4"-->
+            <!--                android:singleLine="true"-->
+            <!--                android:textSize="16sp"-->
 
-<!--                />-->
+            <!--                />-->
 
-<!--            <TextView-->
-<!--                android:id="@+id/percentDownTV"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/percentUpTV"-->
-<!--                android:layout_marginLeft="30dp"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:paddingVertical="10dp"-->
-<!--                android:text="Percentage Down"-->
-<!--                android:textSize="16sp" />-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/percentDownTV"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@id/percentUpTV"-->
+            <!--                android:layout_marginLeft="30dp"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:paddingVertical="10dp"-->
+            <!--                android:text="Percentage Down"-->
+            <!--                android:textSize="16sp" />-->
 
-<!--            <EditText-->
-<!--                android:id="@+id/pdEdtTxt"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@id/puEdtTxt"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_marginTop="7dp"-->
-<!--                android:layout_marginRight="50dp"-->
-<!--                android:digits="-0123456789."-->
-<!--                android:hint="0.00%"-->
-<!--                android:inputType="number"-->
-<!--                android:maxLength="5"-->
-<!--                android:singleLine="true"-->
-<!--                android:textSize="16sp"-->
+            <!--            <EditText-->
+            <!--                android:id="@+id/pdEdtTxt"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@id/puEdtTxt"-->
+            <!--                android:layout_alignParentRight="true"-->
+            <!--                android:layout_marginTop="7dp"-->
+            <!--                android:layout_marginRight="50dp"-->
+            <!--                android:digits="-0123456789."-->
+            <!--                android:hint="0.00%"-->
+            <!--                android:inputType="number"-->
+            <!--                android:maxLength="5"-->
+            <!--                android:singleLine="true"-->
+            <!--                android:textSize="16sp"-->
 
-<!--                />-->
+            <!--                />-->
 
 
             <Button
