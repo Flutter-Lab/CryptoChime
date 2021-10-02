@@ -4,10 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -43,6 +46,10 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         holder.symbolTextView.setText(currencyRVModel.getSymbol());
         holder.nameTextView.setText(currencyRVModel.getName());
         holder.priceTextView.setText("$"+df2.format(currencyRVModel.getPrice()));
+
+        //Load Coin Logo Image to RecycleView
+        String urlString = currencyRVModel.getLogoURL();
+        Glide.with(context).load(urlString).into(holder.logoImage);
     }
 
     @Override
@@ -54,6 +61,7 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
 
         //Declare variable fro Views // Which we will see on sample_layout
         TextView symbolTextView, nameTextView, priceTextView;
+        ImageView logoImage;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,6 +70,7 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
             symbolTextView = itemView.findViewById(R.id.symbolTextView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
             priceTextView = itemView.findViewById(R.id.priceTextView);
+            logoImage = itemView.findViewById(R.id.logo_imageView);
 
         }
     }

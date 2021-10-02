@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class CurrencyRVModel implements Parcelable {
 
-    String symbol, name;
+    String symbol, name, logoURL;
     double price, pc24h;
 
     protected CurrencyRVModel(Parcel in) {
@@ -13,6 +13,7 @@ public class CurrencyRVModel implements Parcelable {
         name = in.readString();
         price = in.readDouble();
         pc24h = in.readDouble();
+        logoURL = in.readString();
     }
 
     @Override
@@ -21,6 +22,7 @@ public class CurrencyRVModel implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(price);
         dest.writeDouble(pc24h);
+        dest.writeString(logoURL);
     }
 
     @Override
@@ -72,10 +74,25 @@ public class CurrencyRVModel implements Parcelable {
         this.pc24h = pc24h;
     }
 
+    public String getLogoURL() {
+        return logoURL;
+    }
+
+    public void setLogoURL(String logoURL) {
+        this.logoURL = logoURL;
+    }
+
     public CurrencyRVModel(String symbol, String name, double price, double pc24h) {
         this.symbol = symbol;
         this.name = name;
         this.price = price;
         this.pc24h = pc24h;
+    }
+
+    public CurrencyRVModel(String symbol, String name, String logoURL, double price) {
+        this.symbol = symbol;
+        this.name = name;
+        this.logoURL = logoURL;
+        this.price = price;
     }
 }

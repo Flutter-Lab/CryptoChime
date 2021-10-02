@@ -18,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -67,14 +68,8 @@ public class HomeFragment extends Fragment  {
 
         getRVData();
 
-        getCurrencyData();
-
-
-
-
-
-
-
+        //getCurrencyData();
+        getCurrencyDataNomics();
 
 
         return view;
@@ -176,7 +171,55 @@ public class HomeFragment extends Fragment  {
     }
 
 
-//        public void printText(){
-//        Log.i("My Name Print: ", "Abir Hossain");
-//        }
+
+    private void getCurrencyDataNomics(){
+
+        loadingPB.setVisibility(View.VISIBLE);
+        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&per-page=100&page=1";
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+                loadingPB.setVisibility(View.GONE);
+                try {
+                    for(int i=0; i<response.length();i++){
+                        JSONObject dataObj = response.getJSONObject(i);
+                        String name = dataObj.getString("name");
+                        String symbol = dataObj.getString("symbol");
+                        double price = dataObj.getDouble("price");
+
+                        //JSONObject oneDay = dataObj.getJSONObject("1d");
+                        //double pc24 = oneDay.getDouble("price_change");
+
+                        String urlString = dataObj.getString("logo_url");
+
+                        //currencyRVModalArrayList.add(new CurrencyRVModel(symbol,name,price, pc24));
+                        currencyRVModalArrayList.add(new CurrencyRVModel(symbol,name,urlString, price));
+//
+                    }
+                    currencyRVAdapter.notifyDataSetChanged();
+
+                }catch (JSONException e){
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),"Fail to extract json data..",Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                loadingPB.setVisibility(View.GONE);
+                Toast.makeText(getContext(),"Fail to get the data..", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        requestQueue.add(jsonArrayRequest);
+    }
+
+
+
 }

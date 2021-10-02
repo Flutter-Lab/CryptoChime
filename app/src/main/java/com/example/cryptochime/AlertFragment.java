@@ -37,6 +37,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -216,8 +217,6 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void afterTextChanged(Editable editable) {
 
-
-
                     }
                 });
 
@@ -257,40 +256,37 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
     private void getCurrencyData(){
 
         loadingPB.setVisibility(View.VISIBLE);
-        String url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&per-page=100&page=1";
 
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
         long mRequestStartTime = System.currentTimeMillis(); // set the request start time just before you send the request.
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(JSONArray response) {
                 loadingPB.setVisibility(View.GONE);
 
                 try {
-                    JSONArray dataArray = response.getJSONArray("data");
-
-                    for (int i=0; i<dataArray.length(); i++){
-                        JSONObject dataObj = dataArray.getJSONObject(i);
+                    for (int i=0; i<response.length(); i++){
+                        JSONObject dataObj = response.getJSONObject(i);
                         String symbol = dataObj.getString("symbol");
                         String name = dataObj.getString("name");
+                        double price = dataObj.getDouble("price");
 
-                        JSONObject quote = dataObj.getJSONObject("quote");
-                        JSONObject USD = quote.getJSONObject("USD");
+//                        JSONObject quote = dataObj.getJSONObject("quote");
+//                        JSONObject USD = quote.getJSONObject("USD");
+//                        double price = USD.getDouble("price");
+//                        double pc24h = USD.getDouble("percent_change_24h");
 
-                        double price = USD.getDouble("price");
-                        double pc24h = USD.getDouble("percent_change_24h");
+                        JSONObject oneDay = dataObj.getJSONObject("1d");
+                        double pc24h = oneDay.getDouble("price_change_pct")* 100;
 
                         currencyRVModelArrayList.add(new CurrencyRVModel(symbol, name, price, pc24h));
                         //Add name to coinNameList Array fro AlertPage;
                         coinNameList.add(symbol);
 
                     }
-
-
-
-
 
                 } catch (JSONException e) {
 
@@ -313,19 +309,12 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getContext(), "Fail to get the data", Toast.LENGTH_SHORT).show();
 
             }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("X-CMC_PRO_API_KEY", "cf22e625-7f13-4277-857c-6c60021e50dd");
-                return headers;
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
-
+        });
+        requestQueue.add(jsonArrayRequest);
 
     }
+
+
 
 
     private void alertTypesList(){
@@ -428,12 +417,77 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                 pendingIntent);
     }
 
-//
-//    public static AlertFragment getInstance(){
-//        return instance;
-//    }
 
 
+
+    private void getCurrencyDataBackup(){
+
+        loadingPB.setVisibility(View.VISIBLE);
+        String url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        long mRequestStartTime = System.currentTimeMillis(); // set the request start time just before you send the request.
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                loadingPB.setVisibility(View.GONE);
+
+                try {
+                    JSONArray dataArray = response.getJSONArray("data");
+
+                    for (int i=0; i<dataArray.length(); i++){
+                        JSONObject dataObj = dataArray.getJSONObject(i);
+                        String symbol = dataObj.getString("symbol");
+                        String name = dataObj.getString("name");
+
+                        JSONObject quote = dataObj.getJSONObject("quote");
+                        JSONObject USD = quote.getJSONObject("USD");
+
+                        double price = USD.getDouble("price");
+                        double pc24h = USD.getDouble("percent_change_24h");
+
+                        currencyRVModelArrayList.add(new CurrencyRVModel(symbol, name, price, pc24h));
+                        //Add name to coinNameList Array fro AlertPage;
+                        coinNameList.add(symbol);
+
+                    }
+
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Fail to extract json data...", Toast.LENGTH_SHORT).show();
+                }
+
+                // calculate the duration in milliseconds
+                long totalRequestTime = System.currentTimeMillis() - mRequestStartTime;
+
+                Log.i("TotalRequest Time", ""+totalRequestTime);
+                Log.i("TotalRequest Time", ""+totalRequestTime);
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getContext(), "Fail to get the data", Toast.LENGTH_SHORT).show();
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("X-CMC_PRO_API_KEY", "cf22e625-7f13-4277-857c-6c60021e50dd");
+                return headers;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
+
+
+    }
 
 
 

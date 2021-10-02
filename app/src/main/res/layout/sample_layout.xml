@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
+    android:layout_marginBottom="1dp"
     app:cardBackgroundColor="#FFFFFF">
 
 
@@ -11,11 +11,18 @@
         android:id="@+id/coinInfoBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:padding="4dp"
-
-
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="7dp"
         >
+
+        <ImageView
+            android:id="@+id/logo_imageView"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_launcher_background" />
 
 
         <TextView
@@ -23,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Symbol"
+            android:layout_toRightOf="@id/logo_imageView"
             android:textColor="#070707"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -32,9 +40,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/symbolTextView"
+            android:layout_toRightOf="@id/logo_imageView"
             android:text="Name"
             android:textColor="#424343"
-            android:textSize="13sp"
+            android:textSize="12sp"
 
             />
 
