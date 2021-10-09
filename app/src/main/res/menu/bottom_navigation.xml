@@ -16,5 +16,10 @@
         android:icon="@drawable/ic_notification"
         android:title="Alert"/>
 
+    <item
+        android:id="@+id/nav_alert2"
+        android:icon="@drawable/ic_alert2"
+        android:title="Alert2"/>
+
 
 </menu>

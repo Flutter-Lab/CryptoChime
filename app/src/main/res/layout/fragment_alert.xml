@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-
-
     <RelativeLayout
         android:id="@+id/alertLayout"
         android:layout_width="match_parent"
@@ -54,20 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="Loud Alarm"
-
-
                 />
 
-            <!--            <CheckBox-->
-            <!--                android:id="@+id/onlyNotifyCheckBox"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_alignRight="@id/longAlarmCheckBox"-->
-            <!--                android:layout_alignParentRight="true"-->
-            <!--                android:layout_marginRight="30dp"-->
-            <!--                android:text="Only Notify"-->
-
-            <!--                />-->
 
             <RelativeLayout
                 android:id="@+id/coinInfoBlock"

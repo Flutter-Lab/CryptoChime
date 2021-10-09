@@ -40,8 +40,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
     static DecimalFormat df2 = new DecimalFormat("#.##");
 
-
-
     public static MediaPlayer mPlayer;
 
     String mySymbol;
@@ -59,7 +57,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
     PendingIntent alertIntent;
 
 
-    //MainActivity mainActivity = new MainActivity();
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -86,139 +83,12 @@ public class NotificationBroadcast extends BroadcastReceiver {
         //if Market Price percentage changed in expected value
         //Show Notification
 
-        Log.i("is Notified", String.valueOf(isNotified));
+        //Log.i("is Notified", String.valueOf(isNotified));
 
-//        if(isNotified == 0){
-//            String url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
-//
-//            RequestQueue requestQueue = Volley.newRequestQueue(context);
-//
-//            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-//                @SuppressLint("CommitPrefEdits")
-//                @Override
-//                public void onResponse(JSONObject response) {
-//
-//
-//                    try {
-//                        JSONArray dataArray = response.getJSONArray("data");
-//
-//                        for (int i=0; i<dataArray.length(); i++){
-//                            JSONObject dataObj = dataArray.getJSONObject(i);
-//                            String symbol = dataObj.getString("symbol");
-//                            String name = dataObj.getString("name");
-//
-//                            JSONObject quote = dataObj.getJSONObject("quote");
-//                            JSONObject USD = quote.getJSONObject("USD");
-//
-//                            double price = USD.getDouble("price");
-//                            double pc24h = USD.getDouble("percent_change_24h");
-//
-//                            float pc24hf = (float)pc24h;
-//
-//                            if (symbol.equals(mySymbol)){
-//
-//                                switch (alertTypeCode){
-//                                    //Price Rises Above
-//                                    case 0:
-//                                        if (price > userValue){
-//                                            notifyTitle = symbol + " Price rises above $"+ userValue;
-//                                            notifyText = name + " Current price is : $"+df2.format(price);
-//                                            showNotification(context, notifyTitle, notifyText);
-//                                            //Toast.makeText(context, "AlertType Code is: "+alertTypeCode, Toast.LENGTH_SHORT).show();
-//                                            //AlertFragment.getInstance().stopAlert();
-//                                            stopAlert(context);
-//                                            prefNotify.edit().putInt("isNotified", 1).apply();
-//                                            if(isLongAlarm){
-//                                                mPlayer.start();
-//                                            }
-//
-//
-//                                        }
-//                                        break;
-//                                    //Price Drops to
-//                                    case 1:
-//                                        if(price<userValue){
-//                                            notifyTitle = symbol + " Price drops to $"+ userValue;
-//                                            notifyText = name + " Current price is $: "+df2.format(price);
-//                                            showNotification(context, notifyTitle, notifyText);
-//                                            //Toast.makeText(context, "AlertType Code is: "+alertTypeCode, Toast.LENGTH_SHORT).show();
-//                                           // AlertFragment.getInstance().stopAlert();
-//                                            stopAlert(context);
-//                                            prefNotify.edit().putInt("isNotified", 1).apply();
-//                                            if(isLongAlarm){
-//                                                mPlayer.start();
-//                                            }
-//                                        }
-//                                        break;
-//                                    //24H Change is Over
-//                                    case 2:
-//                                        if(pc24hf>userValue){
-//                                            notifyTitle = symbol + " 24h Price change is over +"+df2.format(pc24hf) +"%";
-//                                            notifyText = name + " Current price is : "+df2.format(price);
-//                                            showNotification(context, notifyTitle, notifyText);
-//                                            //Toast.makeText(context, "AlertType Code is: "+alertTypeCode, Toast.LENGTH_SHORT).show();
-//                                            //AlertFragment.getInstance().stopAlert();
-//                                            stopAlert(context);
-//                                            prefNotify.edit().putInt("isNotified", 1).apply();
-//                                            if(isLongAlarm){
-//                                                mPlayer.start();
-//                                            }
-//                                        }
-//                                        break;
-//                                    //24H Change is Down
-//                                    case 3:
-//                                        if(pc24hf<userValue){
-//                                            notifyTitle = symbol + " 24h Price change is down "+df2.format(pc24hf) +"%";
-//                                            notifyText = name + " Current price is : $"+df2.format(price);
-//                                            showNotification(context, notifyTitle, notifyText);
-//                                            //Toast.makeText(context, "AlertType Code is: "+alertTypeCode, Toast.LENGTH_SHORT).show();
-//                                            //AlertFragment.getInstance().stopAlert();
-//                                            stopAlert(context);
-//                                            prefNotify.edit().putInt("isNotified", 1).apply();
-//                                            if(isLongAlarm){
-//                                                mPlayer.start();
-//                                            }
-//                                        }
-//                                        break;
-//                                    default:
-//                                        break;
-//                                }
-//
-//                            }
-//
-//                            rvModelArrayList2.add(new CurrencyRVModel(symbol, name, price, pc24h));
-//                        }
-//
-//                    } catch (JSONException e) {
-//
-//                        e.printStackTrace();
-//                        Toast.makeText(context, "Fail to extract json data...", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                }
-//            }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError error) {
-//
-//                    Toast.makeText(context, "Fail to get the data", Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }){
-//                @Override
-//                public Map<String, String> getHeaders() throws AuthFailureError {
-//
-//                    HashMap<String, String> headers = new HashMap<>();
-//                    headers.put("X-CMC_PRO_API_KEY", "cf22e625-7f13-4277-857c-6c60021e50dd");
-//                    return headers;
-//                }
-//            };
-//            requestQueue.add(jsonObjectRequest);
-//        }
 
         if(isNotified == 0){
             getDataAndNotify(context);
         }
-
 
     }
 
@@ -248,14 +118,13 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
 
 
-    //Stop Long Alert
+    //Stop Long Alert when user tap on Notification
     private void stopAlert(Context context){
 
         AlarmManager aManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         Intent sintent = new Intent(context, NotificationBroadcast.class);
         PendingIntent intent = PendingIntent.getBroadcast(context, 0, sintent, PendingIntent.FLAG_UPDATE_CURRENT);
         aManager.cancel(intent);
-        //Toast.makeText(context, "Alert Stopped", Toast.LENGTH_LONG).show();
     }
 
     private void getDataAndNotify(Context context){
@@ -275,15 +144,11 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         String symbol = dataObj.getString("symbol");
                         String name = dataObj.getString("name");
 
-//                        JSONObject quote = dataObj.getJSONObject("quote");
-//                        JSONObject USD = quote.getJSONObject("USD");
-
                         double price = dataObj.getDouble("price");
 
                         JSONObject oneDay = dataObj.getJSONObject("1d");
                         double pc24h = oneDay.getDouble("price_change_pct") * 100;
 
-                        //double pc24h = USD.getDouble("percent_change_24h");
 
                         float pc24hf = (float)pc24h;
 
@@ -373,15 +238,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                 Toast.makeText(context, "Fail to get the data", Toast.LENGTH_SHORT).show();
 
             }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("X-CMC_PRO_API_KEY", "cf22e625-7f13-4277-857c-6c60021e50dd");
-                return headers;
-            }
-        };
+        });
         requestQueue.add(jsonArrayRequest);
     }
 

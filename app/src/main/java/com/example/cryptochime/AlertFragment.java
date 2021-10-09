@@ -52,17 +52,12 @@ import java.util.Map;
 
 public class AlertFragment extends Fragment implements View.OnClickListener {
 
-    //To call a method from this fragment to another class/fragment
-    //private static AlertFragment instance;
-
-
     // Variable for alertView Layout
-    TextView spinningTextView;
     EditText valueEditText;
     Dialog selectCoinDialog;
     Button setAlertButton;
     String selectedSymbol;
-    TextView alertRLSymbolTextView, alertRLNameTextView, alertRLPriceTextView, alertRL24PercentTextView;
+    TextView spinningTextView, alertRLSymbolTextView, alertRLNameTextView, alertRLPriceTextView, alertRL24PercentTextView;
     ProgressBar loadingPB;
     boolean isLongAlarm;
     float userValue;
@@ -78,11 +73,7 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
 
-
-
-
     ArrayList<String> coinNameList;
-
 
     ArrayList<CurrencyRVModel> currencyRVModelArrayList;
 
@@ -90,8 +81,6 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
     SharedPreferences pref, prefUserValue, prefNotify, prefAlertTypeCode, prefisLongAlarm;
 
     static DecimalFormat df2 = new DecimalFormat("#.##");
-
-
 
 
     @Nullable
@@ -108,25 +97,16 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
         prefAlertTypeCode = this.getActivity().getSharedPreferences("alertTypeCode", Context.MODE_PRIVATE);
         prefisLongAlarm = this.getActivity().getSharedPreferences("isLongAlarm", Context.MODE_PRIVATE);
 
-
-
-
         //Assign alertView Variables
         spinningTextView = view.findViewById(R.id.spinningTextViewId);
         coinNameList = new ArrayList<String>();
-        //puEditText = view.findViewById(R.id.puEdtTxt);
-        //pdEditText = view.findViewById(R.id.pdEdtTxt);
         alertTypeTextView = view.findViewById(R.id.alertTypeTextView);
         valueEditText = view.findViewById(R.id.valueEditText);
         setAlertButton = view.findViewById(R.id.setAlertButton);
         setAlertButton.setOnClickListener(this);
-
         loadingPB = view.findViewById(R.id.progressBar);
         longAlarmCheckbox = view.findViewById(R.id.longAlarmCheckBox);
-
         currencyRVModelArrayList = new ArrayList<CurrencyRVModel>();
-
-
 
         //Alert Page Coin Preview Block
         alertRLSymbolTextView = view.findViewById(R.id.alertRLSymbolTextView);
@@ -138,33 +118,18 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
         isLongAlarm = prefisLongAlarm.getBoolean("isLongAlarm", false);
         longAlarmCheckbox.setChecked(isLongAlarm);
 
-        
-
-
 
         getCurrencyData();
         instatiateSpinningList();
         alertTypesList();
 
 
-
-
-
-
-
         longAlarmCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-
                 prefisLongAlarm.edit().putBoolean("isLongAlarm", b).apply();
-
-                //Log.i("Long Alarm", String.valueOf(b));
-
-
             }
         });
-
-
 
         return view;
 
@@ -191,14 +156,11 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                 EditText editText = selectCoinDialog.findViewById(R.id.searchEditText);
                 ListView listView = selectCoinDialog.findViewById(R.id.searchListView);
 
-
                 //Initialize Array adapter for spinning list
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, coinNameList);
 
                 //Set Adapter to spinning list
                 listView.setAdapter(adapter);
-
-
 
                 editText.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -220,33 +182,28 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                     }
                 });
 
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        //When item selected from list
-                        //Set selected item on text view
-                        spinningTextView.setText(adapter.getItem(i));
+                listView.setOnItemClickListener((adapterView, view1, i, l) -> {
+                    //When item selected from list
+                    //Set selected item on text view
+                    spinningTextView.setText(adapter.getItem(i));
 
-                        selectedSymbol = adapter.getItem(i);
+                    selectedSymbol = adapter.getItem(i);
 
-                        pref.edit().putString("mySymbol", selectedSymbol).apply();
+                    pref.edit().putString("mySymbol", selectedSymbol).apply();
 
-                        //Show Info in Infor RL
-                        for (CurrencyRVModel element : currencyRVModelArrayList) {
+                    //Show Info in Infor RL
+                    for (CurrencyRVModel element : currencyRVModelArrayList) {
 
-                            if (element.symbol == selectedSymbol) {
+                        if (element.symbol == selectedSymbol) {
 
-                                alertRLSymbolTextView.setText(element.symbol);
-                                alertRLNameTextView.setText(element.name);
-                                alertRLPriceTextView.setText("$"+ df2.format(element.price));
-                                alertRL24PercentTextView.setText(df2.format(element.pc24h)+"%");
-                            }
+                            alertRLSymbolTextView.setText(element.symbol);
+                            alertRLNameTextView.setText(element.name);
+                            alertRLPriceTextView.setText("$"+ df2.format(element.price));
+                            alertRL24PercentTextView.setText(df2.format(element.pc24h)+"%");
                         }
-
-
-                        //Dismiss dialog
-                        selectCoinDialog.dismiss();
                     }
+                    //Dismiss dialog
+                    selectCoinDialog.dismiss();
                 });
             }
         });
@@ -273,49 +230,32 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                         String symbol = dataObj.getString("symbol");
                         String name = dataObj.getString("name");
                         double price = dataObj.getDouble("price");
-
-//                        JSONObject quote = dataObj.getJSONObject("quote");
-//                        JSONObject USD = quote.getJSONObject("USD");
-//                        double price = USD.getDouble("price");
-//                        double pc24h = USD.getDouble("percent_change_24h");
-
                         JSONObject oneDay = dataObj.getJSONObject("1d");
                         double pc24h = oneDay.getDouble("price_change_pct")* 100;
 
                         currencyRVModelArrayList.add(new CurrencyRVModel(symbol, name, price, pc24h));
                         //Add name to coinNameList Array fro AlertPage;
                         coinNameList.add(symbol);
-
                     }
-
                 } catch (JSONException e) {
-
                     e.printStackTrace();
                     Toast.makeText(getContext(), "Fail to extract json data...", Toast.LENGTH_SHORT).show();
                 }
-
                 // calculate the duration in milliseconds
                 long totalRequestTime = System.currentTimeMillis() - mRequestStartTime;
 
                 Log.i("TotalRequest Time", ""+totalRequestTime);
                 Log.i("TotalRequest Time", ""+totalRequestTime);
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
                 Toast.makeText(getContext(), "Fail to get the data", Toast.LENGTH_SHORT).show();
-
             }
         });
         requestQueue.add(jsonArrayRequest);
-
     }
-
-
-
 
     private void alertTypesList(){
         alertTypeTextView.setOnClickListener(new View.OnClickListener() {
@@ -344,7 +284,6 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                 alertTypesList.add("24H change is over (%)");
                 alertTypesList.add("24H change is down (%)");
 
-
                 //Initialize Array adapter for spinning list
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, alertTypesList);
 
@@ -360,21 +299,13 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                         alertTypeTextView.setText(adapter.getItem(i));
                         //alertTypeCode = i;
                         prefAlertTypeCode.edit().putInt("alertTypeCode", i).apply();
-
-
-
                         //Dismiss dialog
                         alertTypeDialog.dismiss();
                     }
                 });
             }
         });
-
-
     }
-
-
-
 
     //Set Alert Button Click Method
     @Override
@@ -397,7 +328,6 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
     public void setAlarm(){
         Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();
         int alertId = 0;
@@ -416,79 +346,6 @@ public class AlertFragment extends Fragment implements View.OnClickListener {
                 1000, interval,
                 pendingIntent);
     }
-
-
-
-
-    private void getCurrencyDataBackup(){
-
-        loadingPB.setVisibility(View.VISIBLE);
-        String url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-
-        long mRequestStartTime = System.currentTimeMillis(); // set the request start time just before you send the request.
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                loadingPB.setVisibility(View.GONE);
-
-                try {
-                    JSONArray dataArray = response.getJSONArray("data");
-
-                    for (int i=0; i<dataArray.length(); i++){
-                        JSONObject dataObj = dataArray.getJSONObject(i);
-                        String symbol = dataObj.getString("symbol");
-                        String name = dataObj.getString("name");
-
-                        JSONObject quote = dataObj.getJSONObject("quote");
-                        JSONObject USD = quote.getJSONObject("USD");
-
-                        double price = USD.getDouble("price");
-                        double pc24h = USD.getDouble("percent_change_24h");
-
-                        currencyRVModelArrayList.add(new CurrencyRVModel(symbol, name, price, pc24h));
-                        //Add name to coinNameList Array fro AlertPage;
-                        coinNameList.add(symbol);
-
-                    }
-
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "Fail to extract json data...", Toast.LENGTH_SHORT).show();
-                }
-
-                // calculate the duration in milliseconds
-                long totalRequestTime = System.currentTimeMillis() - mRequestStartTime;
-
-                Log.i("TotalRequest Time", ""+totalRequestTime);
-                Log.i("TotalRequest Time", ""+totalRequestTime);
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Toast.makeText(getContext(), "Fail to get the data", Toast.LENGTH_SHORT).show();
-
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("X-CMC_PRO_API_KEY", "cf22e625-7f13-4277-857c-6c60021e50dd");
-                return headers;
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
-
-
-    }
-
 
 
 }

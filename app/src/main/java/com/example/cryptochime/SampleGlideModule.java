@@ -5,6 +5,8 @@ import com.bumptech.glide.module.AppGlideModule;
 
 @GlideModule
 
+//This class is helping to show SVG image in Volley
+
 public class SampleGlideModule extends AppGlideModule {
 
     @Override

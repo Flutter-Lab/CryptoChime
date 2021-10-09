@@ -38,36 +38,25 @@ public class HomeFragment extends Fragment  {
     RecyclerView currenciesRV;
     //Declare Adapter
     CurrencyRVAdapter currencyRVAdapter;
-    //ArrayList for Spinning list in AlertView
-    //ArrayList<String> symbolArrayList;
     //Declare data which I want to show in RV
     public ArrayList<CurrencyRVModel> currencyRVModalArrayList;
-
-    static DecimalFormat df2 = new DecimalFormat("#.##");
     ProgressBar loadingPB;
-
     //Declare ArrayList for Alert search
-    ArrayList<String> symbolArrayList;
-
+    public ArrayList<String> symbolArrayList;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        //Testing Purpose
-        //myName = "Abir Hossain";
-
+        //PickUp Coin list for AlertPage2
         symbolArrayList = new ArrayList<String>();
-
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
 
         currenciesRV = view.findViewById(R.id.recyclerView);
         loadingPB = view.findViewById(R.id.idPBLoading);
 
         getRVData();
-
         //getCurrencyData();
         getCurrencyDataNomics();
 
@@ -75,101 +64,18 @@ public class HomeFragment extends Fragment  {
         return view;
     }
 
-
-
     private void getRVData(){
-        //Find RecyclerView
-
         //currenciesRV = findViewById(R.id.recyclerView);
         currenciesRV.setHasFixedSize(true);
-
         //loadingPB = findViewById(R.id.idPBLoading);
         currencyRVModalArrayList = new ArrayList<>();
-
         //Send data to Adapter // After this create sample single view Layout
         currencyRVAdapter = new CurrencyRVAdapter(currencyRVModalArrayList, getContext());
-
         //Set the Adapter with RecyclerView
         currenciesRV.setAdapter(currencyRVAdapter);
         //Set Layout Manager to RecyclerView
         currenciesRV.setLayoutManager(new LinearLayoutManager(getContext()));
     }
-
-
-    private void getCurrencyData(){
-
-        loadingPB.setVisibility(View.VISIBLE);
-        String url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-
-        long mRequestStartTime = System.currentTimeMillis(); // set the request start time just before you send the request.
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                loadingPB.setVisibility(View.GONE);
-
-                try {
-                    JSONArray dataArray = response.getJSONArray("data");
-
-                    for (int i=0; i<dataArray.length(); i++){
-                        JSONObject dataObj = dataArray.getJSONObject(i);
-                        String symbol = dataObj.getString("symbol");
-                        String name = dataObj.getString("name");
-
-                        JSONObject quote = dataObj.getJSONObject("quote");
-                        JSONObject USD = quote.getJSONObject("USD");
-
-                        double price = USD.getDouble("price");
-                        double pc24h = USD.getDouble("percent_change_24h");
-
-                        currencyRVModalArrayList.add(new CurrencyRVModel(symbol, name, price, pc24h));
-                        //Add name to coinNameList Array fro AlertPage;
-                        symbolArrayList.add(symbol);
-
-                    }
-
-                    currencyRVAdapter.notifyDataSetChanged();
-
-
-
-
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "Fail to extract json data...", Toast.LENGTH_SHORT).show();
-                }
-
-                // calculate the duration in milliseconds
-                long totalRequestTime = System.currentTimeMillis() - mRequestStartTime;
-
-                Log.i("TotalRequest Time", ""+totalRequestTime);
-                Log.i("TotalRequest Time", ""+totalRequestTime);
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Toast.makeText(getContext(), "Fail to get the data", Toast.LENGTH_SHORT).show();
-
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("X-CMC_PRO_API_KEY", "cf22e625-7f13-4277-857c-6c60021e50dd");
-                return headers;
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
-
-
-    }
-
 
 
     private void getCurrencyDataNomics(){
@@ -178,48 +84,31 @@ public class HomeFragment extends Fragment  {
         String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&per-page=100&page=1";
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
 
-                loadingPB.setVisibility(View.GONE);
-                try {
-                    for(int i=0; i<response.length();i++){
-                        JSONObject dataObj = response.getJSONObject(i);
-                        String name = dataObj.getString("name");
-                        String symbol = dataObj.getString("symbol");
-                        double price = dataObj.getDouble("price");
+            loadingPB.setVisibility(View.GONE);
+            try {
+                for(int i=0; i<response.length();i++){
+                    JSONObject dataObj = response.getJSONObject(i);
+                    String name = dataObj.getString("name");
+                    String symbol = dataObj.getString("symbol");
+                    double price = dataObj.getDouble("price");
+                    String urlString = dataObj.getString("logo_url");
 
-                        //JSONObject oneDay = dataObj.getJSONObject("1d");
-                        //double pc24 = oneDay.getDouble("price_change");
-
-                        String urlString = dataObj.getString("logo_url");
-
-                        //currencyRVModalArrayList.add(new CurrencyRVModel(symbol,name,price, pc24));
-                        currencyRVModalArrayList.add(new CurrencyRVModel(symbol,name,urlString, price));
-//
-                    }
-                    currencyRVAdapter.notifyDataSetChanged();
-
-                }catch (JSONException e){
-                    e.printStackTrace();
-                    Toast.makeText(getContext(),"Fail to extract json data..",Toast.LENGTH_SHORT).show();
-
+                    currencyRVModalArrayList.add(new CurrencyRVModel(symbol,name, urlString, price));
+                    symbolArrayList.add(symbol);
                 }
+                currencyRVAdapter.notifyDataSetChanged();
 
+            }catch (JSONException e){
+                e.printStackTrace();
+                Toast.makeText(getContext(),"Fail to extract json data..",Toast.LENGTH_SHORT).show();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                loadingPB.setVisibility(View.GONE);
-                Toast.makeText(getContext(),"Fail to get the data..", Toast.LENGTH_SHORT).show();
-            }
+        }, error -> {
+            loadingPB.setVisibility(View.GONE);
+            Toast.makeText(getContext(),"Fail to get the data..", Toast.LENGTH_SHORT).show();
         });
-
 
         requestQueue.add(jsonArrayRequest);
     }
-
-
-
 }

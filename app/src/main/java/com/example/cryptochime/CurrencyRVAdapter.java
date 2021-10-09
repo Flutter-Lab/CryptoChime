@@ -17,10 +17,12 @@ import java.util.ArrayList;
 
 public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.MyViewHolder>{
 
+    MainActivity mainActivity = new MainActivity();
+
     //Mention data which I want to show in RV
     ArrayList<CurrencyRVModel> currencyRVModelArrayList;
     Context context;
-    static DecimalFormat df2 = new DecimalFormat("#.##");
+    //static DecimalFormat df2 = new DecimalFormat("#.##");
 
     //Generated Constructor for all Data
     public CurrencyRVAdapter(ArrayList<CurrencyRVModel> currencyRVModalArrayList, Context context) {
@@ -45,7 +47,7 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         CurrencyRVModel currencyRVModel = currencyRVModelArrayList.get(position);
         holder.symbolTextView.setText(currencyRVModel.getSymbol());
         holder.nameTextView.setText(currencyRVModel.getName());
-        holder.priceTextView.setText("$"+df2.format(currencyRVModel.getPrice()));
+        holder.priceTextView.setText("$"+mainActivity.dynDF(currencyRVModel.getPrice()).format(currencyRVModel.getPrice()));
 
         //Load Coin Logo Image to RecycleView
         String urlString = currencyRVModel.getLogoURL();
@@ -74,4 +76,5 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
 
         }
     }
+
 }
