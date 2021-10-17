@@ -7,20 +7,27 @@
     tools:context=".AlertFragment2">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/alertRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="13dp"
-        android:visibility="visible" />
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/alert_rv_sample"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/addAlertButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="148dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="60dp"
+        android:padding="15dp"
         android:text="Add Alert"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
 

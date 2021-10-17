@@ -2,18 +2,27 @@ package com.example.cryptochime;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.cryptochime.SetAlertActivity.AddAlertActivity;
+import com.example.cryptochime.SetAlertActivity.AlertDB.Alert;
+import com.example.cryptochime.SetAlertActivity.AlertDB.AlertDatabase;
+import com.example.cryptochime.SetAlertActivity.AlertListAdapter;
+
+import java.util.List;
 
 
 public class AlertFragment2 extends Fragment {
+
+    private AlertListAdapter alertListAdapter;
 
     Button addAlert;
 
@@ -36,11 +45,34 @@ public class AlertFragment2 extends Fragment {
 
 
 
+        initRecyclerView(view);
+        loadAlertList();
 
 
         return view;
 
 
+    }
+
+    private void initRecyclerView(View view){
+        RecyclerView recyclerView = view.findViewById(R.id.alertRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
+
+        alertListAdapter = new AlertListAdapter(getActivity());
+        recyclerView.setAdapter(alertListAdapter);
+
+
+    }
+
+    private void loadAlertList(){
+        AlertDatabase db = AlertDatabase.getInstance(getActivity().getApplicationContext());
+        List<Alert> alertList = db.alertDao().getAllAlerts();
+        alertListAdapter.setAlertList(alertList);
+        alertListAdapter.notifyDataSetChanged();
     }
     
     
