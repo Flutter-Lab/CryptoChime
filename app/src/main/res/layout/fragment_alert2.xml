@@ -9,13 +9,14 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alertRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp"
+        android:layout_height="wrap_content"
+        android:padding="1dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/addAlertButton"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/alert_rv_sample"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginBottom="5dp"
+        tools:listitem="@layout/alert_rv_sample" />
 
     <Button
         android:id="@+id/addAlertButton"

@@ -19,5 +19,8 @@ public class Alert {
     @ColumnInfo(name = "alert_value")
     public String alertValue;
 
+    @ColumnInfo(name="alert_type_code")
+    public int alertTypeCode;
+
 
 }

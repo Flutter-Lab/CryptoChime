@@ -10,7 +10,7 @@ import java.util.List;
 @Dao
 public interface AlertDao {
 
-    @Query("SELECT * FROM alert")
+    @Query("SELECT * FROM Alert")
     List<Alert> getAllAlerts();
 
     @Insert

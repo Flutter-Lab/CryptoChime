@@ -1,6 +1,11 @@
 package com.example.cryptochime.SetAlertActivity;
 
+import static android.content.Context.ALARM_SERVICE;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,9 +24,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.cryptochime.AlertFragment2;
 import com.example.cryptochime.MainActivity;
+import com.example.cryptochime.NotificationBroadcast;
 import com.example.cryptochime.R;
-import com.example.cryptochime.SetAlertActivity.AlertDB.Alert;
 import com.example.cryptochime.SetAlertActivity.AlertDB.AlertDatabase;
+import com.example.cryptochime.SetAlertActivity.AlertDB.Alert;
 
 
 public class SetValueFragment extends Fragment {
@@ -89,6 +95,7 @@ public class SetValueFragment extends Fragment {
             public void onClick(View view) {
                 //Toast.makeText(getActivity(), "Alert Code is"+alertCode, Toast.LENGTH_SHORT).show();
                 Log.i("Alert Code", "Alert code in Button Click " + alertCode);
+                setAlarm();
 
                 userValueText = valueEditText.getText().toString();
 
@@ -97,10 +104,10 @@ public class SetValueFragment extends Fragment {
                 switch (alertCode) {
                     case 0:
                         if (userValue > currentPrice) {
-                            Log.i("Info", "User Value is: " + userValue + ", Current Price is $" + currentPrice);
-                            Toast.makeText(getActivity(), "Alert Added for Price Up", Toast.LENGTH_SHORT).show();
-
+                            //Log.i("Info", "User Value is: " + userValue + ", Current Price is $" + currentPrice);
+                            //Toast.makeText(getActivity(), "Alert Added for Price Up", Toast.LENGTH_SHORT).show();
                             alertTypeText = "Price above";
+                            gotoAlertList();
                         } else {
                             wrongInputTextView.setText("Value should be larger than current price - $" + mainActivity.dynDF(currentPrice).format(currentPrice));
                             wrongInputTextView.setVisibility(View.VISIBLE);
@@ -108,8 +115,9 @@ public class SetValueFragment extends Fragment {
                         break;
                     case 1:
                         if (userValue < currentPrice) {
-                            Toast.makeText(getActivity(), "Alert Added for Price Down", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "Alert Added for Price Down", Toast.LENGTH_SHORT).show();
                             alertTypeText = "Price down";
+                            gotoAlertList();
                         } else {
                             wrongInputTextView.setText("Value should be smaller than current price - " + mainActivity.dynDF(currentPrice).format(currentPrice));
                             wrongInputTextView.setVisibility(View.VISIBLE);
@@ -117,8 +125,9 @@ public class SetValueFragment extends Fragment {
                         break;
                     case 2:
                         if (userValue > pc24h) {
-                            Toast.makeText(getActivity(), "Alert Added for % Up", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "Alert Added for % Up", Toast.LENGTH_SHORT).show();
                             alertTypeText = "24H change above";
+                            gotoAlertList();
                         } else {
                             wrongInputTextView.setText("Value should be larger than current 24h % Change - " + pc24h + "%");
                             wrongInputTextView.setVisibility(View.VISIBLE);
@@ -127,8 +136,9 @@ public class SetValueFragment extends Fragment {
 
                     case 3:
                         if (userValue < pc24h) {
-                            Toast.makeText(getActivity(), "Alert Added for % Down", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "Alert Added for % Down", Toast.LENGTH_SHORT).show();
                             alertTypeText = "24H change below";
+                            gotoAlertList();
                         } else {
                             wrongInputTextView.setText("Value should be smaller than current 24h % Change - " + pc24h + "%");
                             wrongInputTextView.setVisibility(View.VISIBLE);
@@ -136,16 +146,13 @@ public class SetValueFragment extends Fragment {
                         break;
                 }
 
+                //gotoAlertList();
 
-
-                saveNewAlert(alertSymbol, alertTypeText, userValueText );
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_alert_fragment_container,
-                        new AlertFragment2()).commit();
             }
         });
     }
 
-    private void saveNewAlert(String currencyName, String alertType, String alertValue){
+    private void saveNewAlert(String currencyName, String alertType, String alertValue, int alertCode){
 
         AlertDatabase db = AlertDatabase.getInstance(getActivity().getApplicationContext());
 
@@ -153,8 +160,33 @@ public class SetValueFragment extends Fragment {
         alert.currencyName = currencyName;
         alert.alertType = alertType;
         alert.alertValue = alertValue;
+        alert.alertTypeCode = alertCode;
 
         db.alertDao().insertAlert(alert);
+
+    }
+
+    private void gotoAlertList(){
+        saveNewAlert(alertSymbol, alertTypeText, userValueText, alertCode);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_alert_fragment_container,
+                new AlertFragment2()).commit();
+    }
+
+    public void setAlarm(){
+        Toast.makeText(getContext(), "Reminder Set!", Toast.LENGTH_SHORT).show();
+        int alertId = 0;
+
+        Intent intent = new Intent(getActivity(), NotificationBroadcast.class );
+        intent.putExtra("alertId", alertId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent,0);
+
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
+        //prefNotify.edit().putInt("isNotified", 0).apply();
+        long interval = 5000;
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                1000, interval,
+                pendingIntent);
 
     }
 

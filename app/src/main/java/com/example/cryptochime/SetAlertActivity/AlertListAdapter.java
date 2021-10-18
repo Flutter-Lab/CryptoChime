@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,13 @@ public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyVi
 
         holder.symbolTV.setText(this.alertList.get(position).currencyName);
         holder.alertTypeNameTV.setText(this.alertList.get(position).alertType + " " + this.alertList.get(position).alertValue);
+        if (this.alertList.get(position).alertTypeCode %2 == 0){
+            holder.alertIndicator.setImageResource(R.drawable.ic_alert_up);
+        } else {
+            holder.alertIndicator.setImageResource(R.drawable.ic_alert_down);
+        }
+
+
 
 
     }
@@ -53,11 +61,13 @@ public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder{
         TextView symbolTV;
         TextView alertTypeNameTV;
+        ImageView alertIndicator;
 
         public MyViewHolder (View view){
             super(view);
             symbolTV = view.findViewById(R.id.symbolTextView);
             alertTypeNameTV = view.findViewById(R.id.alertTypeNameTV);
+            alertIndicator = view.findViewById(R.id.alertIndicator);
         }
     }
 }
