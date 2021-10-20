@@ -23,7 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.cryptochime.SetAlertActivity.AlertDB.Alert;
-import com.example.cryptochime.SetAlertActivity.AlertDB.AlertDatabase;
+import com.example.cryptochime.SetAlertActivity.AlertDB.MainDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -152,7 +152,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         float pc24hf = (float) pc24h;
 
                         //Get Alert List from Database
-                        AlertDatabase db = AlertDatabase.getInstance(context.getApplicationContext());
+                        MainDatabase db = MainDatabase.getInstance(context.getApplicationContext());
                         List<Alert> alertList = db.alertDao().getAllAlerts();
 
                         Toast.makeText(context, "Alert DB size: " + alertList.size(), Toast.LENGTH_SHORT).show();
@@ -163,83 +163,72 @@ public class NotificationBroadcast extends BroadcastReceiver {
                                 float userValueDB = Float.parseFloat(alertList.get(j).alertValue);
                                 alertTypeCodeDB = alertList.get(j).alertTypeCode;
 
-                                //Log.i()
 
                                 //Check alerttypecode and Notify if condition match
                                 checkAlertCodeAndNotify(context, priceFloat, symbol, name, userValueDB, pc24hf);
                                 //notifyWithoutCheck(context, priceFloat, symbol, name, userValueDB);
                             }
                         }
-
-
-                        if (symbol.equals(mySymbol)) {
-
-                            switch (alertTypeCode) {
-                                //Price Rises Above
-                                case 0:
-                                    if (price > userValue) {
-                                        notifyTitle = symbol + " Price rises above $" + userValue;
-                                        notifyText = name + " Current price is : $" + df2.format(price);
-                                        showNotification(context, notifyTitle, notifyText);
-                                        //Toast.makeText(context, "AlertType Code is: "+alertTypeCode, Toast.LENGTH_SHORT).show();
-                                        //AlertFragment.getInstance().stopAlert();
-                                        stopAlert(context);
-                                        prefNotify.edit().putInt("isNotified", 1).apply();
-                                        if (isLongAlarm) {
-                                            mPlayer.start();
-                                        }
-                                    }
-                                    break;
-                                //Price Drops to
-                                case 1:
-                                    if (price < userValue) {
-                                        notifyTitle = symbol + " Price drops to $" + userValue;
-                                        notifyText = name + " Current price is $: " + df2.format(price);
-                                        showNotification(context, notifyTitle, notifyText);
-                                        //Toast.makeText(context, "AlertType Code is: "+alertTypeCode, Toast.LENGTH_SHORT).show();
-                                        // AlertFragment.getInstance().stopAlert();
-                                        stopAlert(context);
-                                        prefNotify.edit().putInt("isNotified", 1).apply();
-                                        if (isLongAlarm) {
-                                            mPlayer.start();
-                                        }
-                                    }
-                                    break;
-                                //24H Change is Over
-                                case 2:
-                                    if (pc24hf > userValue) {
-                                        notifyTitle = symbol + " 24h Price change is over +" + df2.format(pc24hf) + "%";
-                                        notifyText = name + " Current price is : " + df2.format(price);
-                                        showNotification(context, notifyTitle, notifyText);
-                                        //Toast.makeText(context, "AlertType Code is: "+alertTypeCode, Toast.LENGTH_SHORT).show();
-                                        //AlertFragment.getInstance().stopAlert();
-                                        stopAlert(context);
-                                        prefNotify.edit().putInt("isNotified", 1).apply();
-                                        if (isLongAlarm) {
-                                            mPlayer.start();
-                                        }
-                                    }
-                                    break;
-                                //24H Change is Down
-                                case 3:
-                                    if (pc24hf < userValue) {
-                                        notifyTitle = symbol + " 24h Price change is down " + df2.format(pc24hf) + "%";
-                                        notifyText = name + " Current price is : $" + df2.format(price);
-                                        showNotification(context, notifyTitle, notifyText);
-                                        //Toast.makeText(context, "AlertType Code is: "+alertTypeCode, Toast.LENGTH_SHORT).show();
-                                        //AlertFragment.getInstance().stopAlert();
-                                        stopAlert(context);
-                                        prefNotify.edit().putInt("isNotified", 1).apply();
-                                        if (isLongAlarm) {
-                                            mPlayer.start();
-                                        }
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                        }
+//                        if (symbol.equals(mySymbol)) {
+//
+//                            switch (alertTypeCode) {
+//                                //Price Rises Above
+//                                case 0:
+//                                    if (price > userValue) {
+//                                        notifyTitle = symbol + " Price rises above $" + userValue;
+//                                        notifyText = name + " Current price is : $" + df2.format(price);
+//                                        showNotification(context, notifyTitle, notifyText);
+//                                        stopAlert(context);
+//                                        prefNotify.edit().putInt("isNotified", 1).apply();
+//                                        if (isLongAlarm) {
+//                                            mPlayer.start();
+//                                        }
+//                                    }
+//                                    break;
+//                                //Price Drops to
+//                                case 1:
+//                                    if (price < userValue) {
+//                                        notifyTitle = symbol + " Price drops to $" + userValue;
+//                                        notifyText = name + " Current price is $: " + df2.format(price);
+//                                        showNotification(context, notifyTitle, notifyText);
+//                                        stopAlert(context);
+//                                        prefNotify.edit().putInt("isNotified", 1).apply();
+//                                        if (isLongAlarm) {
+//                                            mPlayer.start();
+//                                        }
+//                                    }
+//                                    break;
+//                                //24H Change is Over
+//                                case 2:
+//                                    if (pc24hf > userValue) {
+//                                        notifyTitle = symbol + " 24h Price change is over +" + df2.format(pc24hf) + "%";
+//                                        notifyText = name + " Current price is : " + df2.format(price);
+//                                        showNotification(context, notifyTitle, notifyText);
+//                                        stopAlert(context);
+//                                        prefNotify.edit().putInt("isNotified", 1).apply();
+//                                        if (isLongAlarm) {
+//                                            mPlayer.start();
+//                                        }
+//                                    }
+//                                    break;
+//                                //24H Change is Down
+//                                case 3:
+//                                    if (pc24hf < userValue) {
+//                                        notifyTitle = symbol + " 24h Price change is down " + df2.format(pc24hf) + "%";
+//                                        notifyText = name + " Current price is : $" + df2.format(price);
+//                                        showNotification(context, notifyTitle, notifyText);
+//                                        stopAlert(context);
+//                                        prefNotify.edit().putInt("isNotified", 1).apply();
+//                                        if (isLongAlarm) {
+//                                            mPlayer.start();
+//                                        }
+//                                    }
+//                                    break;
+//                                default:
+//                                    break;
+//                            }
+//
+//                        }
 
                         rvModelArrayList2.add(new CurrencyRVModel(symbol, name, price, pc24h));
                     }

@@ -1,33 +1,15 @@
 package com.example.cryptochime;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-
-import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,10 +47,6 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.nav_favorites:
                             selectedFragment = new FavoriteFragment();
                             fragmentTag = "Favorite";
-                            break;
-                        case R.id.nav_alert:
-                            selectedFragment = new AlertFragment();
-                            fragmentTag = "Alert";
                             break;
                         case R.id.nav_alert2:
                             selectedFragment = new AlertFragment2();

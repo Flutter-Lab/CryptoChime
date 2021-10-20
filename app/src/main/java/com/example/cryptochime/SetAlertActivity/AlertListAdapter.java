@@ -22,9 +22,14 @@ public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyVi
     public AlertListAdapter(Context context){
         this.context = context;
     }
+
     public void setAlertList(List<Alert> alertList){
         this.alertList = alertList;
         notifyDataSetChanged();
+    }
+
+    public Alert getAlertAt(int position){
+        return alertList.get(position);
     }
 
 

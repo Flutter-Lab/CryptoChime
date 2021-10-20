@@ -22,12 +22,11 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.example.cryptochime.AlertFragment2;
 import com.example.cryptochime.MainActivity;
 import com.example.cryptochime.NotificationBroadcast;
 import com.example.cryptochime.R;
-import com.example.cryptochime.SetAlertActivity.AlertDB.AlertDatabase;
 import com.example.cryptochime.SetAlertActivity.AlertDB.Alert;
+import com.example.cryptochime.SetAlertActivity.AlertDB.MainDatabase;
 
 
 public class SetValueFragment extends Fragment {
@@ -154,7 +153,7 @@ public class SetValueFragment extends Fragment {
 
     private void saveNewAlert(String currencyName, String alertType, String alertValue, int alertCode){
 
-        AlertDatabase db = AlertDatabase.getInstance(getActivity().getApplicationContext());
+        MainDatabase db = MainDatabase.getInstance(getActivity().getApplicationContext());
 
         Alert alert = new Alert();
         alert.currencyName = currencyName;
@@ -168,8 +167,8 @@ public class SetValueFragment extends Fragment {
 
     private void gotoAlertList(){
         saveNewAlert(alertSymbol, alertTypeText, userValueText, alertCode);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_alert_fragment_container,
-                new AlertFragment2()).commit();
+
+        getActivity().finish();
     }
 
     public void setAlarm(){

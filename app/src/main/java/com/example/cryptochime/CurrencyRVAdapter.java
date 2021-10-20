@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.MyViewHolder>{
 
     MainActivity mainActivity = new MainActivity();
+
+    private OnItemClickListener mListener;
+
 
     //Mention data which I want to show in RV
     ArrayList<CurrencyRVModel> currencyRVModelArrayList;
@@ -30,6 +32,15 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         this.context = context;
     }
 
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+
+    }
+
 
 
     @NonNull
@@ -38,7 +49,7 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         //Inflate sample layout
         View view = LayoutInflater.from(context).inflate(R.layout.sample_layout, parent, false);
 
-        return new MyViewHolder(view);
+        return new MyViewHolder(view, mListener);
     }
 
     @Override
@@ -52,6 +63,8 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         //Load Coin Logo Image to RecycleView
         String urlString = currencyRVModel.getLogoURL();
         Glide.with(context).load(urlString).into(holder.logoImage);
+
+
     }
 
     @Override
@@ -59,13 +72,15 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         return currencyRVModelArrayList.size();
     }
 
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         //Declare variable fro Views // Which we will see on sample_layout
         TextView symbolTextView, nameTextView, priceTextView;
         ImageView logoImage;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
 
             // Find all views from given itemView / We got sample_layout as itemView from onCreateViewHolder using Inflater
@@ -73,6 +88,21 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
             nameTextView = itemView.findViewById(R.id.nameTextView);
             priceTextView = itemView.findViewById(R.id.priceTextView);
             logoImage = itemView.findViewById(R.id.logo_imageView);
+
+
+            //Set Long Click Listener
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                    return true;
+                }
+            });
 
         }
     }

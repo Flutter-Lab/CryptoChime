@@ -1,5 +1,7 @@
 package com.example.cryptochime;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cryptochime.SetAlertActivity.AddAlertActivity;
 import com.example.cryptochime.SetAlertActivity.AlertDB.Alert;
-import com.example.cryptochime.SetAlertActivity.AlertDB.AlertDatabase;
+import com.example.cryptochime.SetAlertActivity.AlertDB.MainDatabase;
 import com.example.cryptochime.SetAlertActivity.AlertListAdapter;
 
 import java.util.List;
@@ -39,10 +41,9 @@ public class AlertFragment2 extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddAlertActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
-
 
 
         initRecyclerView(view);
@@ -66,13 +67,23 @@ public class AlertFragment2 extends Fragment {
         recyclerView.setAdapter(alertListAdapter);
 
 
+
     }
 
-    private void loadAlertList(){
-        AlertDatabase db = AlertDatabase.getInstance(getActivity().getApplicationContext());
+    public void loadAlertList(){
+        MainDatabase db = MainDatabase.getInstance(getActivity().getApplicationContext());
         List<Alert> alertList = db.alertDao().getAllAlerts();
         alertListAdapter.setAlertList(alertList);
         alertListAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            loadAlertList();
+        }
     }
     
     
