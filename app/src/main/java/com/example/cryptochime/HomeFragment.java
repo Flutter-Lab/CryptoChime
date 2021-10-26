@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment  {
+public class HomeFragment extends Fragment {
 
     //Declare RecyclerView
     RecyclerView currenciesRV;
@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-         db = MainDatabase.getInstance(getActivity().getApplicationContext());
+        db = MainDatabase.getInstance(getActivity().getApplicationContext());
         favoriteItemList = db.favoriteDao().getAllFavorites();
 
         //PickUp Coin list for AlertPage2
@@ -65,12 +65,12 @@ public class HomeFragment extends Fragment  {
         return view;
     }
 
-    private void showToast(String message){
+    private void showToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
 
     }
 
-    private void getRVData(){
+    private void getRVData() {
         currenciesRV.setHasFixedSize(true);
         //loadingPB = findViewById(R.id.idPBLoading);
         currencyRVModalArrayList = new ArrayList<>();
@@ -86,35 +86,39 @@ public class HomeFragment extends Fragment  {
 
 
         //Set OnClick RV Item
-        currencyRVAdapter.setOnItemClickListener(new CurrencyRVAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                String favCurrencyName = currencyRVModalArrayList.get(position).getSymbol();
-                ArrayList<String> favCurrencyList = new ArrayList<>();
+        currencyRVAdapter.setOnItemClickListener(position -> {
+            String adapterCurrencySymbol = currencyRVModalArrayList.get(position).getSymbol();
+            String adapterCurrencyName = currencyRVModalArrayList.get(position).getName();
+            String adapterCurrencyURL = currencyRVModalArrayList.get(position).getLogoURL();
+            double adapterCurrencyPrice = currencyRVModalArrayList.get(position).getPrice();
 
-                //Save coin Name to Favorite DB Table
-                MainDatabase db = MainDatabase.getInstance(getActivity().getApplicationContext());
-                Favorite favorite = new Favorite();
-                List<Favorite> favoriteList = db.favoriteDao().getAllFavorites();
 
-                for (int i = 0; i< favoriteList.size(); i++){
-                    favCurrencyList.add(favoriteList.get(i).currencyName);
-                    }
-                if (!favCurrencyList.contains(favCurrencyName)){
-                    favorite.currencyName = favCurrencyName;
-                    db.favoriteDao().insertFavorite(favorite);
-                    Toast.makeText(getContext(), favCurrencyName+" is added to Favorite List", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(getContext(), favCurrencyName+" is already in Favorite List", Toast.LENGTH_SHORT).show();
-                }
+            ArrayList<String> favCurrencyList = new ArrayList<>();
+
+            //Save coin Name to Favorite DB Table
+            Favorite favorite = new Favorite();
+            List<Favorite> favoriteList = db.favoriteDao().getAllFavorites();
+
+            for (int i = 0; i < favoriteList.size(); i++) {
+                favCurrencyList.add(favoriteList.get(i).currencySymbol);
+            }
+            if (!favCurrencyList.contains(adapterCurrencySymbol)) {
+                favorite.currencyName = adapterCurrencyName;
+                favorite.currencySymbol = adapterCurrencySymbol;
+                favorite.currencyIconURL = adapterCurrencyURL;
+                favorite.currencyPrice = (float) adapterCurrencyPrice;
+
+
+                db.favoriteDao().insertFavorite(favorite);
+                Toast.makeText(getContext(), adapterCurrencySymbol + " is added to Favorite List", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), adapterCurrencySymbol + " is already in Favorite List", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
-
-
-    private void getCurrencyDataNomics(){
+    private void getCurrencyDataNomics() {
 
         loadingPB.setVisibility(View.VISIBLE);
         String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&per-page=100&page=1";
@@ -124,37 +128,66 @@ public class HomeFragment extends Fragment  {
 
             loadingPB.setVisibility(View.GONE);
             try {
-                for(int i=0; i<response.length();i++){
+                for (int i = 0; i < response.length(); i++) {
                     JSONObject dataObj = response.getJSONObject(i);
                     String name = dataObj.getString("name");
                     String symbol = dataObj.getString("symbol");
                     double price = dataObj.getDouble("price");
                     String urlString = dataObj.getString("logo_url");
 
-                    currencyRVModalArrayList.add(new CurrencyRVModel(symbol,name, urlString, price));
+                    currencyRVModalArrayList.add(new CurrencyRVModel(symbol, name, urlString, price));
                     symbolArrayList.add(symbol);
 
 
-                    //Update currency information in Favorite Fragment
+                    ArrayList<String> favCurrencyList = new ArrayList<>();
+                    Favorite favorite = new Favorite();
+                    List<Favorite> favoriteList = db.favoriteDao().getAllFavorites();
 
 
-                    for (int j = 0; j < favoriteItemList.size(); j++){
-                        if (symbol.equals(favoriteItemList.get(j).currencyName)){
-                            favRVModelArraylist.add(new CurrencyRVModel(symbol, name, urlString, price));
-                        }
+                    //Make a list of DB Symbols
+                    for (int k = 0; k < favoriteList.size(); k++) {
+                        favCurrencyList.add(favoriteList.get(k).currencySymbol);
                     }
+                    //If symbol is in DB then updady Symbol currency info to DB
+                    if (favCurrencyList.contains(symbol)) {
+                        favorite.favoriteID = favCurrencyList.indexOf(symbol)+1;
+                        favorite.currencyName = name;
+                        favorite.currencySymbol = symbol;
+                        favorite.currencyPrice = (float) price;
+                        favorite.currencyIconURL = urlString;
+
+                        db.favoriteDao().updateFavorite(favorite);
+                    }
+
+//                    //Update currency information in Favorite Fragment
+//                    for (int j = 0; j < favoriteItemList.size(); j++) {
+//                        if (symbol.equals(favoriteItemList.get(j).currencySymbol)) {
+//
+//                            Favorite favorite = new Favorite();
+//                            favorite.favoriteID = j;
+//                            favorite.currencyName = name;
+//                            favorite.currencySymbol = symbol;
+//                            favorite.currencyPrice = (float) price;
+//                            favorite.currencyIconURL = urlString;
+//
+//                            db.favoriteDao().updateFavorite(favorite);
+//
+//
+//                            //favRVModelArraylist.add(new CurrencyRVModel(symbol, name, urlString, price));
+//                        }
+//                    }
                 }
 
 
                 currencyRVAdapter.notifyDataSetChanged();
 
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(),"Fail to extract json data..",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Fail to extract json data..", Toast.LENGTH_SHORT).show();
             }
         }, error -> {
             loadingPB.setVisibility(View.GONE);
-            Toast.makeText(getContext(),"Fail to get the data..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Fail to get the data..", Toast.LENGTH_SHORT).show();
         });
 
         requestQueue.add(jsonArrayRequest);

@@ -155,8 +155,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         MainDatabase db = MainDatabase.getInstance(context.getApplicationContext());
                         List<Alert> alertList = db.alertDao().getAllAlerts();
 
-                        Toast.makeText(context, "Alert DB size: " + alertList.size(), Toast.LENGTH_SHORT).show();
-                        //Log.i("aletDB", "onResponse: " + alertList.get(0).currencyName);
+                        //Toast.makeText(context, "Alert DB size: " + alertList.size(), Toast.LENGTH_SHORT).show();
 
                         for (int j = 0; j < alertList.size(); j++) {
                             if (symbol.equals(alertList.get(j).currencyName)) {
