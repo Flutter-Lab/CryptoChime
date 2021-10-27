@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -19,4 +20,14 @@ public interface AlertDao {
 
     @Delete
     void deleteAlert(Alert alert);
+
+    @Update
+    void updateAlert(Alert alert);
+
+    @Query("UPDATE alert SET isNotified = :isNotified WHERE currency_symbol = :currencySymbol AND alert_value = :alertValue ")
+    void updateField(boolean isNotified, String currencySymbol, float alertValue);
+
+    @Query("DELETE FROM alert WHERE currency_symbol = :symbol")
+    void deleteBySymbol(String symbol);
+
 }

@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -41,6 +42,8 @@ public class ChoseCurrencyFragment extends Fragment {
     EditText coinListEditText;
     ArrayAdapter<String> adapter;
 
+    ProgressBar loadingPBAlert;
+
     ArrayList<CurrencyRVModel> currencyRVModelArrayList;
 
     SharedPreferences selectedCoinPref, selectedCoinCurrPrice, selectedCoinPC24h;
@@ -57,12 +60,12 @@ public class ChoseCurrencyFragment extends Fragment {
         listView = view.findViewById(R.id.pickUpCoinListView);
         coinListEditText = view.findViewById(R.id.coinListEditText);
         currencyRVModelArrayList = new ArrayList<CurrencyRVModel>();
+        loadingPBAlert = view.findViewById(R.id.idPBLoadingAlert);
 
         //Assign SharedPreferences
         selectedCoinPref = getContext().getSharedPreferences("selectedCoin", Context.MODE_PRIVATE);
         selectedCoinCurrPrice = getContext().getSharedPreferences("selectedCoinCurrPrice", Context.MODE_PRIVATE);
         selectedCoinPC24h = getContext().getSharedPreferences("selectedCoinPC24h", Context.MODE_PRIVATE);
-
 
 
 
@@ -114,9 +117,6 @@ public class ChoseCurrencyFragment extends Fragment {
                     }
                 }
 
-
-
-
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_alert_fragment_container,
                         new SelectAlertTypeFragment()).commit();
 
@@ -135,13 +135,13 @@ public class ChoseCurrencyFragment extends Fragment {
 
     private void getCurrencyDataNomics(){
 
-        //loadingPB.setVisibility(View.VISIBLE);
+        loadingPBAlert.setVisibility(View.VISIBLE);
         String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&interval=1d&per-page=100&page=1";
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
 
-            //loadingPB.setVisibility(View.GONE);
+            loadingPBAlert.setVisibility(View.GONE);
             try {
                 for(int i=0; i<response.length();i++){
                     JSONObject dataObj = response.getJSONObject(i);

@@ -159,23 +159,6 @@ public class HomeFragment extends Fragment {
                         db.favoriteDao().updateFavorite(favorite);
                     }
 
-//                    //Update currency information in Favorite Fragment
-//                    for (int j = 0; j < favoriteItemList.size(); j++) {
-//                        if (symbol.equals(favoriteItemList.get(j).currencySymbol)) {
-//
-//                            Favorite favorite = new Favorite();
-//                            favorite.favoriteID = j;
-//                            favorite.currencyName = name;
-//                            favorite.currencySymbol = symbol;
-//                            favorite.currencyPrice = (float) price;
-//                            favorite.currencyIconURL = urlString;
-//
-//                            db.favoriteDao().updateFavorite(favorite);
-//
-//
-//                            //favRVModelArraylist.add(new CurrencyRVModel(symbol, name, urlString, price));
-//                        }
-//                    }
                 }
 
 

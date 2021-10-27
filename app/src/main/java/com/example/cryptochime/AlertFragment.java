@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -22,7 +23,10 @@ import com.example.cryptochime.SetAlertActivity.AlertListAdapter;
 import java.util.List;
 
 
-public class AlertFragment2 extends Fragment {
+public class AlertFragment extends Fragment {
+
+    MainDatabase db;
+    List<Alert> alertList;
 
     private AlertListAdapter alertListAdapter;
 
@@ -50,6 +54,20 @@ public class AlertFragment2 extends Fragment {
         loadAlertList();
 
 
+
+        //Set On Click >> Delete
+        alertListAdapter.setOnItemClickListener(position -> {
+
+            String symbol = alertList.get(position).currencySymbol;
+            db.alertDao().deleteBySymbol(symbol);
+            alertList.remove(position);
+            alertListAdapter.notifyDataSetChanged();
+
+            Toast.makeText(getContext(), symbol+" is Deleted From Alert List", Toast.LENGTH_SHORT).show();
+
+        });
+
+
         return view;
 
 
@@ -71,8 +89,8 @@ public class AlertFragment2 extends Fragment {
     }
 
     public void loadAlertList(){
-        MainDatabase db = MainDatabase.getInstance(getActivity().getApplicationContext());
-        List<Alert> alertList = db.alertDao().getAllAlerts();
+        db = MainDatabase.getInstance(getActivity().getApplicationContext());
+        alertList = db.alertDao().getAllAlerts();
         alertListAdapter.setAlertList(alertList);
         alertListAdapter.notifyDataSetChanged();
     }

@@ -1,5 +1,9 @@
 package com.example.cryptochime;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -28,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         if(NotificationBroadcast.mPlayer != null){
             NotificationBroadcast.mPlayer.stop();
         }
+
+        startAlarm(this);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -49,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                             fragmentTag = "Favorite";
                             break;
                         case R.id.nav_alert2:
-                            selectedFragment = new AlertFragment2();
+                            selectedFragment = new AlertFragment();
                             fragmentTag = "Alert2";
                             break;
                     }
@@ -65,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Dynamic Decimal Format for price
-    public DecimalFormat dynDF(double price){
+    public static DecimalFormat dynDF(double price){
         DecimalFormat dyndf;
         if (price >= 10){
             dyndf = new DecimalFormat("#.##");
@@ -81,6 +87,24 @@ public class MainActivity extends AppCompatActivity {
             dyndf = new DecimalFormat("#.########");
         }
         return dyndf;
+    }
+
+    public void startAlarm(Context context){
+        //Toast.makeText(context, "Reminder Set!", Toast.LENGTH_SHORT).show();
+        int alertId = 0;
+
+        Intent intent = new Intent(context, NotificationBroadcast.class );
+        intent.putExtra("alertId", alertId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent,0);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        //prefNotify.edit().putInt("isNotified", 0).apply();
+        long interval = 5000;
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                1000, interval,
+                pendingIntent);
+
     }
 
 

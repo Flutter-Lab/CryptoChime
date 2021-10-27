@@ -16,7 +16,6 @@ public class NotifyApp extends Application {
 
         createNotificationChannels();
 
-
     }
 
     private void createNotificationChannels(){
