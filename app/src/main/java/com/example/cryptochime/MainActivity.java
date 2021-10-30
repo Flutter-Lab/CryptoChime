@@ -1,9 +1,12 @@
 package com.example.cryptochime;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -17,10 +20,19 @@ import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
 
+    SharedPreferences alertDialogSP;
+
+    public static DecimalFormat df2;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        df2 = new DecimalFormat("#.##");
+
+        alertDialogSP = getSharedPreferences("alertDialog", MODE_PRIVATE);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
@@ -34,6 +46,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         startAlarm(this);
+
+        //Show Notification for first time App open
+        boolean bln = alertDialogSP.getBoolean("alertDialog", false);
+        if (!bln){
+            loadDialogAlert();
+            bln = true;
+            alertDialogSP.edit().putBoolean("alertDialog", bln).apply();
+        }
+
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -105,6 +127,20 @@ public class MainActivity extends AppCompatActivity {
                 1000, interval,
                 pendingIntent);
 
+    }
+
+    private void loadDialogAlert(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Allow Loud Alert Notification");
+        dialog.setMessage("CryptoChime will show notification with loud alert sound if you chose loud alert option!");
+        dialog.setIcon(getResources().getDrawable(R.drawable.ic_alert_dialog));
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog.show();
     }
 
 

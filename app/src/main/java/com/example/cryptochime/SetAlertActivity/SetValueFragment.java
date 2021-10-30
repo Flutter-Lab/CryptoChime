@@ -78,7 +78,7 @@ public class SetValueFragment extends Fragment {
             valueEditText.setText(String.valueOf(mainActivity.dynDF(currentPrice).format(currentPrice)));
             valueInputLayout.setPrefixText("$");
         } else {
-            valueEditText.setText(String.valueOf(pc24h));
+            valueEditText.setText(String.valueOf(MainActivity.df2.format(pc24h)));
             valueInputLayout.setSuffixText("%");
         }
 

@@ -54,7 +54,6 @@ public class AlertFragment extends Fragment {
         loadAlertList();
 
 
-
         //Set On Click >> Delete
         alertListAdapter.setOnItemClickListener(position -> {
 

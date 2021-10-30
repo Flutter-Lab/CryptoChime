@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cryptochime.MainActivity;
 import com.example.cryptochime.R;
 import com.example.cryptochime.SetAlertActivity.AlertDB.Alert;
 
@@ -17,8 +18,9 @@ import java.util.List;
 
 public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyViewHolder> {
 
-   private OnItemClickListener mListener;
 
+
+   private OnItemClickListener mListener;
     private Context context;
     private List<Alert> alertList;
     public AlertListAdapter(Context context){
@@ -57,10 +59,14 @@ public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyVi
     public void onBindViewHolder(@NonNull AlertListAdapter.MyViewHolder holder, int position) {
 
         holder.symbolTV.setText(this.alertList.get(position).currencySymbol);
+        //double alertValueDouble = (double)this.alertList.get(position).alertValue;
+        double alertValueDouble = this.alertList.get(position).alertValue;
+
+
         if (this.alertList.get(position).alertTypeCode < 2){
-            holder.alertTypeNameTV.setText(this.alertList.get(position).alertType + " $" + this.alertList.get(position).alertValue);
+            holder.alertTypeNameTV.setText(this.alertList.get(position).alertType + " $" + MainActivity.dynDF(alertValueDouble).format(alertValueDouble));
         } else {
-            holder.alertTypeNameTV.setText(this.alertList.get(position).alertType + " " + this.alertList.get(position).alertValue+"%");
+            holder.alertTypeNameTV.setText(this.alertList.get(position).alertType + " " + MainActivity.df2.format(alertValueDouble)+"%");
         }
 
         if (this.alertList.get(position).alertTypeCode %2 == 0){
