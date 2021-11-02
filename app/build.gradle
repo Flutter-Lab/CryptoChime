@@ -46,4 +46,6 @@ dependencies {
     implementation 'com.kirich1409.svgplugin:glide4:1.0.0'
     implementation "com.caverock:androidsvg:1.2.1"
 
+    implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
+
 }

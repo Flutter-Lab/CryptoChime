@@ -62,7 +62,7 @@ public class AlertFragment extends Fragment {
             alertList.remove(position);
             alertListAdapter.notifyDataSetChanged();
 
-            Toast.makeText(getContext(), symbol+" is Deleted From Alert List", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), symbol+" is Removed from alert list", Toast.LENGTH_SHORT).show();
 
         });
 

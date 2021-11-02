@@ -70,6 +70,7 @@ public class FavoriteFragment extends Fragment {
             favoriteRVAdapter.notifyDataSetChanged();
 
             Toast.makeText(getContext(), symbol+" is Deleted From Favorite", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), " "+getContext().getClass(), Toast.LENGTH_SHORT).show();
 
         });
 

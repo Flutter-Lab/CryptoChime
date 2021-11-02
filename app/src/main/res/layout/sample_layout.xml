@@ -7,57 +7,105 @@
     app:cardBackgroundColor="#FFFFFF">
 
 
-    <RelativeLayout
-        android:id="@+id/coinInfoBlock"
+
+
+    <com.chauthai.swipereveallayout.SwipeRevealLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="7dp"
-        >
+        android:layout_height="match_parent"
+        app:mode="same_level"
+        app:dragEdge="right">
 
-        <ImageView
-            android:id="@+id/logo_imageView"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="15dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            app:srcCompat="@drawable/ic_favorite" />
-
-
-        <TextView
-            android:id="@+id/symbolTextView"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Symbol"
-            android:layout_toRightOf="@id/logo_imageView"
-            android:textColor="#070707"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/nameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/symbolTextView"
-            android:layout_toRightOf="@id/logo_imageView"
-            android:text="Name"
-            android:textColor="#424343"
-            android:textSize="12sp"
-
-            />
-
-        <TextView
-            android:id="@+id/priceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:text="Price"
-            android:textColor="#0A0B0B" />
+            <TextView
+                android:id="@+id/txtAddToFav"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:text="Add to Favorite"
+                android:gravity="center"
+                android:paddingHorizontal="5dp"
+                android:textColor="@color/white"
+                android:textSize="13dp"
+                android:textStyle="bold"
+                />
 
 
-    </RelativeLayout>
+
+        </LinearLayout>
+
+        <!-- Your main layout here -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <RelativeLayout
+                android:id="@+id/coinInfoBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="7dp"
+                >
+
+                <ImageView
+                    android:id="@+id/logo_imageView"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    app:srcCompat="@drawable/ic_favorite" />
+
+
+                <TextView
+                    android:id="@+id/symbolTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Symbol"
+                    android:layout_toRightOf="@id/logo_imageView"
+                    android:textColor="#070707"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/symbolTextView"
+                    android:layout_toRightOf="@id/logo_imageView"
+                    android:text="Name"
+                    android:textColor="#424343"
+                    android:textSize="12sp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/priceTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:text="Price"
+                    android:textColor="#0A0B0B" />
+
+
+            </RelativeLayout>
+
+
+
+        </FrameLayout>
+
+
+
+    </com.chauthai.swipereveallayout.SwipeRevealLayout>
 
 
 </androidx.cardview.widget.CardView>
+
+
+
+
+

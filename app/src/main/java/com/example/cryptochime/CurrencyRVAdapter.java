@@ -6,13 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 
 import java.util.ArrayList;
+
 
 public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.MyViewHolder>{
 
@@ -20,11 +22,13 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
 
     private OnItemClickListener mListener;
 
-
     //Mention data which I want to show in RV
+    CurrencyRVModel currencyRVModel;
     ArrayList<CurrencyRVModel> currencyRVModelArrayList;
     Context context;
-    //static DecimalFormat df2 = new DecimalFormat("#.##");
+
+    //Swipe related variable
+    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     //Generated Constructor for all Data
     public CurrencyRVAdapter(ArrayList<CurrencyRVModel> currencyRVModalArrayList, Context context) {
@@ -42,6 +46,7 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
     }
 
 
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,7 +59,13 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         // Set all data into views // Which data we got from MyViewHolder
-        CurrencyRVModel currencyRVModel = currencyRVModelArrayList.get(position);
+        currencyRVModel = currencyRVModelArrayList.get(position);
+
+        //Swipe Related code
+        viewBinderHelper.setOpenOnlyOne(true);
+        viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(currencyRVModelArrayList.get(position).getSymbol()));
+        viewBinderHelper.closeLayout(String.valueOf(currencyRVModelArrayList.get(position).getSymbol()));
+
         holder.symbolTextView.setText(currencyRVModel.getSymbol());
         holder.nameTextView.setText(currencyRVModel.getName());
         holder.priceTextView.setText("$"+mainActivity.dynDF(currencyRVModel.getPrice()).format(currencyRVModel.getPrice()));
@@ -79,6 +90,9 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         TextView symbolTextView, nameTextView, priceTextView;
         ImageView logoImage;
 
+        private SwipeRevealLayout swipeRevealLayout;
+        private TextView addToFavTextview;
+
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
 
@@ -88,22 +102,40 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
             priceTextView = itemView.findViewById(R.id.priceTextView);
             logoImage = itemView.findViewById(R.id.logo_imageView);
 
+            swipeRevealLayout = itemView.findViewById(R.id.swipe_layout);
+            addToFavTextview = itemView.findViewById(R.id.txtAddToFav);
 
-            //Set Long Click Listener
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            if (currencyRVModelArrayList.size() < 95){
+                addToFavTextview.setText("Remove favorite");
+                addToFavTextview.setBackgroundResource(R.color.red);
+            } else {
+                addToFavTextview.setBackgroundResource(R.color.green);
+            }
+
+
+            //Swipe button click listener
+            addToFavTextview.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
+                public void onClick(View view) {
+
                     if (listener != null){
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION){
                             listener.onItemClick(position);
+//                            String symbol = currencyRVModelArrayList.get(position).getSymbol();
+                            try {
+                                viewBinderHelper.closeLayout(String.valueOf(currencyRVModelArrayList.get(position).getSymbol()));
+                            } catch (Exception e){
+
+                            }
                         }
                     }
-                    return true;
                 }
             });
 
+
         }
     }
+
 
 }

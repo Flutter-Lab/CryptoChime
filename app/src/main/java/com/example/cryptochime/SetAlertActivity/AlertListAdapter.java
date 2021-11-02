@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.cryptochime.MainActivity;
 import com.example.cryptochime.R;
 import com.example.cryptochime.SetAlertActivity.AlertDB.Alert;
@@ -26,6 +28,9 @@ public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyVi
     public AlertListAdapter(Context context){
         this.context = context;
     }
+
+    //Swipe related variable
+    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     public void setAlertList(List<Alert> alertList){
         this.alertList = alertList;
@@ -57,6 +62,11 @@ public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull AlertListAdapter.MyViewHolder holder, int position) {
+
+        //Swipe Related code
+        viewBinderHelper.setOpenOnlyOne(true);
+        viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(alertList.get(position).currencySymbol));
+        viewBinderHelper.closeLayout(String.valueOf(alertList.get(position).currencySymbol));
 
         holder.symbolTV.setText(this.alertList.get(position).currencySymbol);
         //double alertValueDouble = (double)this.alertList.get(position).alertValue;
@@ -96,6 +106,9 @@ public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyVi
         ImageView alertIndicator;
         TextView loudAlertText;
 
+        private SwipeRevealLayout swipeRevealLayout;
+        private TextView removeFromAlertTxt;
+
         public MyViewHolder(View view, OnItemClickListener listener){
             super(view);
             symbolTV = view.findViewById(R.id.symbolTextView);
@@ -103,20 +116,29 @@ public class AlertListAdapter extends RecyclerView.Adapter<AlertListAdapter.MyVi
             alertIndicator = view.findViewById(R.id.alertIndicator);
             loudAlertText = view.findViewById(R.id.loudAlertText);
 
+            swipeRevealLayout = view.findViewById(R.id.swipe_layout_alert);
+            removeFromAlertTxt = view.findViewById(R.id.txtToRemoveAlert);
+            
 
-            //Set Long Click Listener
-            view.setOnLongClickListener(new View.OnLongClickListener() {
+            removeFromAlertTxt.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
+                public void onClick(View view) {
                     if (listener != null){
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION){
                             listener.onItemClick(position);
+//                            String symbol = currencyRVModelArrayList.get(position).getSymbol();
+                            try {
+                                viewBinderHelper.closeLayout(String.valueOf(alertList.get(position).currencySymbol));
+                            } catch (Exception e){
+
+                            }
                         }
                     }
-                    return true;
                 }
             });
+
+
         }
     }
 }

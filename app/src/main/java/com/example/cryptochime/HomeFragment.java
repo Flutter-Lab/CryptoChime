@@ -65,10 +65,9 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void showToast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-
-    }
+//    private void showToast(String message) {
+//        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+//    }
 
     private void getRVData() {
         currenciesRV.setHasFixedSize(true);
@@ -107,7 +106,6 @@ public class HomeFragment extends Fragment {
                 favorite.currencySymbol = adapterCurrencySymbol;
                 favorite.currencyIconURL = adapterCurrencyURL;
                 favorite.currencyPrice = (float) adapterCurrencyPrice;
-
 
                 db.favoriteDao().insertFavorite(favorite);
                 Toast.makeText(getContext(), adapterCurrencySymbol + " is added to Favorite List", Toast.LENGTH_SHORT).show();
