@@ -54,8 +54,6 @@ public class ChoseCurrencyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chose_currency, container, false);
 
 
-
-
         coinArrayList = new ArrayList<String>();
         listView = view.findViewById(R.id.pickUpCoinListView);
         coinListEditText = view.findViewById(R.id.coinListEditText);
@@ -170,7 +168,6 @@ public class ChoseCurrencyFragment extends Fragment {
 
                 adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, coinArrayList);
                 listView.setAdapter(adapter);
-
 
                 //currencyRVAdapter.notifyDataSetChanged();
 

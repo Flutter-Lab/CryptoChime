@@ -50,12 +50,17 @@ public class NotificationBroadcast extends BroadcastReceiver {
     int alertTypeCode, alertTypeCodeDB;
     boolean isLongAlarm;
 
+    int selectedAlarmToneValue;
+
     String notifyTitle, notifyText;
 
     ArrayList<CurrencyRVModel> rvModelArrayList2 = new ArrayList<>();
 
-    SharedPreferences prefSymbol, prefUserValue, prefNotify, prefAlertTypeCode, prefisLongAlarm;
+    SharedPreferences prefSymbol, prefUserValue, prefNotify, prefAlertTypeCode, prefisLongAlarm, selectedAlarmTone;
     PendingIntent alertIntent;
+
+    int[] audioArray = {R.raw.happy_bells, R.raw.iphone_6_remix,
+            R.raw.siren_alarm, R.raw.sound_effect_1, R.raw.sound_effect_2};
 
 
     @Override
@@ -71,7 +76,12 @@ public class NotificationBroadcast extends BroadcastReceiver {
         prefAlertTypeCode = context.getSharedPreferences("alertTypeCode", Context.MODE_PRIVATE);
         prefisLongAlarm = context.getSharedPreferences("isLongAlarm", Context.MODE_PRIVATE);
 
-        mPlayer = MediaPlayer.create(context, R.raw.alarm_sound);
+        selectedAlarmTone = context.getSharedPreferences("selectedAlarmTone", Context.MODE_PRIVATE);
+
+
+        selectedAlarmToneValue = prefNotify.getInt("selectedAlarmTone", 1);
+        //mPlayer = MediaPlayer.create(context, R.raw.siren_alarm);
+        mPlayer = MediaPlayer.create(context, audioArray[selectedAlarmToneValue]);
 
 
         mySymbol = prefSymbol.getString("mySymbol", null);
@@ -208,6 +218,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                     //prefNotify.edit().putInt("isNotified", 1).apply();
                     if (isLoudAlert) {
                         mPlayer.start();
+                        mPlayer.setLooping(true);
                     }
 
                     //Mark symbol as notified in DB
@@ -225,6 +236,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                     prefNotify.edit().putInt("isNotified", 1).apply();
                     if (isLoudAlert) {
                         mPlayer.start();
+                        mPlayer.setLooping(true);
                     }
                     //Mark symbol as notified in DB
                     db.alertDao().updateField(true, symbol, userValueDB);
@@ -240,6 +252,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                     prefNotify.edit().putInt("isNotified", 1).apply();
                     if (isLoudAlert) {
                         mPlayer.start();
+                        mPlayer.setLooping(true);
                     }
                     //Mark symbol as notified in DB
                     db.alertDao().updateField(true, symbol, userValueDB);
@@ -255,6 +268,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                     prefNotify.edit().putInt("isNotified", 1).apply();
                     if (isLoudAlert) {
                         mPlayer.start();
+                        mPlayer.setLooping(true);
                     }
                     //Mark symbol as notified in DB
                     db.alertDao().updateField(true, symbol, userValueDB);

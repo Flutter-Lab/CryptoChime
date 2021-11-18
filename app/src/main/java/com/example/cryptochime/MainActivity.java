@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.cryptochime.SettingsActivity.SettingsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DecimalFormat;
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static DecimalFormat df2;
 
+    ImageButton settingButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         df2 = new DecimalFormat("#.##");
 
         alertDialogSP = getSharedPreferences("alertDialog", MODE_PRIVATE);
+        settingButton = findViewById(R.id.settingButton);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
@@ -50,10 +56,20 @@ public class MainActivity extends AppCompatActivity {
         //Show Notification for first time App open
         boolean bln = alertDialogSP.getBoolean("alertDialog", false);
         if (!bln){
+            loadUserInstruction();
             loadDialogAlert();
             bln = true;
             alertDialogSP.edit().putBoolean("alertDialog", bln).apply();
         }
+
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new SettingsFragment()).commit();
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
     }
@@ -129,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadDialogAlert(){
+    public void loadDialogAlert(){
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle("Allow Loud Alert Notification");
         dialog.setMessage("CryptoChime will show notification with loud alert sound if you chose loud alert option!");
@@ -142,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+    private void loadUserInstruction(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new InstructionFragment()).commit();
+    }
+
+
 
 
 

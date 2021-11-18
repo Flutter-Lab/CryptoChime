@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".SettingsActivity.HowToUseFragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="24dp"
+        tools:layout_editor_absoluteY="-137dp"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="100dp">
+
+            <TextView
+                android:id="@+id/htuHeadingTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How to Use?"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/qOneTV"
+                style="@style/howToUseQ"
+                android:text="1. How to add currency in favorite list?"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/htuHeadingTV" />
+
+            <TextView
+                android:id="@+id/detailOneTV"
+                style="@style/howToUseAns"
+                android:text="@string/detailOneTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/qOneTV" />
+
+            <ImageView
+                android:id="@+id/htuImageView1"
+                android:layout_width="280dp"
+                android:layout_height="414dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="50dp"
+                android:src="@drawable/add_to_fav_guide"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detailOneTV" />
+
+
+            <TextView
+                android:id="@+id/qTwoTV"
+                style="@style/howToUseQ"
+                android:layout_marginTop="50dp"
+                android:text="2. How to add currency in favorite list?"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/htuImageView1" />
+
+            <TextView
+                android:id="@+id/detailTwoTV"
+                style="@style/howToUseAns"
+                android:text="@string/detailTwoTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/qTwoTV" />
+
+            <ImageView
+                android:id="@+id/htuImageView2"
+                android:layout_width="280dp"
+                android:layout_height="414dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/add_to_fav_guide"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detailTwoTV" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

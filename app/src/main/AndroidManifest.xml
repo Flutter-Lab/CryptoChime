@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CryptoChime">
         <activity
+            android:name=".SettingsActivity.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".SetAlertActivity.AddAlertActivity"
             android:exported="true" />
         <activity

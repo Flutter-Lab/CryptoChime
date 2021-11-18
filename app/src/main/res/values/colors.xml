@@ -11,4 +11,8 @@
     <color name="green">#06B641</color>
     <color name="red_lite">#FB6565</color>
 
+    <color name="colorPrimary">#05445E</color>
+    <color name="colorPrimaryVariant">#05445E</color>
+    <color name="colorOnPrimary">#D4F1F4</color>
+
 </resources>

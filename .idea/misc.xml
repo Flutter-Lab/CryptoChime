@@ -5,13 +5,16 @@
       <map>
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3609375" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/drawable/corner_radius.xml" value="0.3609375" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/drawable/ic_alert2.xml" value="0.3567708333333333" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.3609375" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/drawable/ic_home.xml" value="0.3609375" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3609375" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/drawable/ic_notification.xml" value="0.3609375" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/drawable/ic_settings.xml" value="0.3567708333333333" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/activity_add_alert.xml" value="0.25" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/activity_coin_pick_up_list.xml" value="0.3307291666666667" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/alert_rv_sample.xml" value="0.34479166666666666" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/dialog_searchable_spinner.xml" value="0.34479166666666666" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/dialog_searchable_spinner2.xml" value="0.34479166666666666" />
@@ -20,9 +23,16 @@
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_chose_currency.xml" value="0.33" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_favorites.xml" value="0.34479166666666666" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_how_to_use.xml" value="0.33" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_instruction.xml" value="0.25" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_select_alert_type.xml" value="0.25" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_select_sound.xml" value="0.340625" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_set_value.xml" value="0.33" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/fragment_settings.xml" value="0.340625" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/sample_layout.xml" value="0.25280898876404495" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/settings_item.xml" value="0.33" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/sound_list_item.xml" value="0.340625" />
+        <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/layout/toolbar.xml" value="0.33" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/menu/bottom_navigation.xml" value="0.34479166666666666" />
         <entry key="..\:/Android Temp Project/CryptoChime/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.22708333333333333" />
       </map>
