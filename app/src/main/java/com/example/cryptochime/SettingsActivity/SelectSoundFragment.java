@@ -1,5 +1,7 @@
 package com.example.cryptochime.SettingsActivity;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -71,8 +73,10 @@ public class SelectSoundFragment extends Fragment {
                 if (curMP != null && curMP.isPlaying()){
                     curMP.stop();
                 }
-                //getActivity().finish();
                 getFragmentManager().popBackStack();
+
+                int seletedAudio = selectedAlarmTone.getInt("selectedAlarmTone", 0);
+                Log.i(TAG, "onClick: Number "+ seletedAudio + "Selected");
             }
         });
 
@@ -124,6 +128,11 @@ public class SelectSoundFragment extends Fragment {
         }
 
     }
+
+
+
+
+
 
 
     class MyAdapter extends ArrayAdapter<String> {

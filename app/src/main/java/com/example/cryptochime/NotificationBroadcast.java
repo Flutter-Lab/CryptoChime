@@ -57,7 +57,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
     ArrayList<CurrencyRVModel> rvModelArrayList2 = new ArrayList<>();
 
     SharedPreferences prefSymbol, prefUserValue, prefNotify, prefAlertTypeCode, prefisLongAlarm, selectedAlarmTone;
-    PendingIntent alertIntent;
 
     int[] audioArray = {R.raw.happy_bells, R.raw.iphone_6_remix,
             R.raw.siren_alarm, R.raw.sound_effect_1, R.raw.sound_effect_2};
@@ -66,8 +65,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         db = MainDatabase.getInstance(context.getApplicationContext());
-
-        //Toast.makeText(context, "Broadcst Started", Toast.LENGTH_SHORT).show();
 
 
         prefSymbol = context.getSharedPreferences("mySymbol", Context.MODE_PRIVATE);
@@ -79,8 +76,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
         selectedAlarmTone = context.getSharedPreferences("selectedAlarmTone", Context.MODE_PRIVATE);
 
 
-        selectedAlarmToneValue = prefNotify.getInt("selectedAlarmTone", 1);
-        //mPlayer = MediaPlayer.create(context, R.raw.siren_alarm);
+        selectedAlarmToneValue = selectedAlarmTone.getInt("selectedAlarmTone", 0);
         mPlayer = MediaPlayer.create(context, audioArray[selectedAlarmToneValue]);
 
 
