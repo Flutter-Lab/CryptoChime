@@ -40,8 +40,8 @@ public class SelectAlertTypeFragment extends Fragment {
 
         alertTypeArrayList.add("Price rises above");
         alertTypeArrayList.add("Price drops to");
-        alertTypeArrayList.add("24H change is over (%)");
-        alertTypeArrayList.add("24H change is down (%)");
+        alertTypeArrayList.add("1H change is over (%)");
+        alertTypeArrayList.add("1H change is down (%)");
 
         //Initialize Array adapter for spinning list
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, alertTypeArrayList);

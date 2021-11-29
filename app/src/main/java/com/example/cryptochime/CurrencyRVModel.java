@@ -6,13 +6,13 @@ import android.os.Parcelable;
 public class CurrencyRVModel implements Parcelable {
 
     String symbol, name, logoURL;
-    double price, pc24h;
+    double price, pc1h;
 
     protected CurrencyRVModel(Parcel in) {
         symbol = in.readString();
         name = in.readString();
         price = in.readDouble();
-        pc24h = in.readDouble();
+        pc1h = in.readDouble();
         logoURL = in.readString();
     }
 
@@ -21,7 +21,7 @@ public class CurrencyRVModel implements Parcelable {
         dest.writeString(symbol);
         dest.writeString(name);
         dest.writeDouble(price);
-        dest.writeDouble(pc24h);
+        dest.writeDouble(pc1h);
         dest.writeString(logoURL);
     }
 
@@ -66,12 +66,12 @@ public class CurrencyRVModel implements Parcelable {
         this.price = price;
     }
 
-    public double getPc24h() {
-        return pc24h;
+    public double getPc1h() {
+        return pc1h;
     }
 
-    public void setPc24h(double pc24h) {
-        this.pc24h = pc24h;
+    public void setPc1h(double pc1h) {
+        this.pc1h = pc1h;
     }
 
     public String getLogoURL() {
@@ -82,11 +82,11 @@ public class CurrencyRVModel implements Parcelable {
         this.logoURL = logoURL;
     }
 
-    public CurrencyRVModel(String symbol, String name, double price, double pc24h) {
+    public CurrencyRVModel(String symbol, String name, double price, double pc1h) {
         this.symbol = symbol;
         this.name = name;
         this.price = price;
-        this.pc24h = pc24h;
+        this.pc1h = pc1h;
     }
 
     public CurrencyRVModel(String symbol, String name, String logoURL, double price) {

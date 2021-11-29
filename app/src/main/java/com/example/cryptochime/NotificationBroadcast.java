@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -35,8 +36,6 @@ import java.util.List;
 public class NotificationBroadcast extends BroadcastReceiver {
 
     MainDatabase db;
-    List<Alert> alertDBList;
-
 
     static DecimalFormat df2 = new DecimalFormat("#.##");
 
@@ -91,14 +90,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
         // Check for price change
         //if Market Price percentage changed in expected value
         //Show Notification
-
-        //Log.i("is Notified", String.valueOf(isNotified));
-
-
-//        if(isNotified == 0){
-//        }
         getDataAndNotify(context);
-
     }
 
 
@@ -140,7 +132,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
     }
 
     private void getDataAndNotify(Context context) {
-        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&per-page=100&page=1";
+        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&interval=1h,1d&per-page=100&page=1";
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -160,10 +152,12 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         float priceFloat = (float) price;
 
 
-                        JSONObject oneDay = dataObj.getJSONObject("1d");
-                        double pc24h = oneDay.getDouble("price_change_pct") * 100;
+                        JSONObject oneHR = dataObj.getJSONObject("1h");
+                        double pc1h = oneHR.getDouble("price_change_pct") * 100;
 
-                        float pc24hf = (float) pc24h;
+                        float pc1hf = (float) pc1h;
+
+                        Log.i("TAG", "onResponse: PC 1H : "+pc1hf);
 
                         //Get Alert List from Database
                         MainDatabase db = MainDatabase.getInstance(context.getApplicationContext());
@@ -181,14 +175,14 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
                                 if (!isNotified){
                                     //Check alerttypecode and Notify if condition match
-                                    checkAlertCodeAndNotify(context, priceFloat, symbol, name, userValueDB, pc24hf, isLoudAlert);
+                                    checkAlertCodeAndNotify(context, priceFloat, symbol, name, userValueDB, pc1hf, isLoudAlert);
                                     //notifyWithoutCheck(context, priceFloat, symbol, name, userValueDB);
                                 }
                             }
                         }
 
 
-                        rvModelArrayList2.add(new CurrencyRVModel(symbol, name, price, pc24h));
+                        rvModelArrayList2.add(new CurrencyRVModel(symbol, name, price, pc1h));
                     }
 
                 } catch (JSONException e) {
@@ -241,7 +235,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
             //24H Change is Over
             case 2:
                 if (pc24hf > userValueDB) {
-                    notifyTitle = symbol + " 24h Price change is over +" + df2.format(pc24hf) + "%";
+                    notifyTitle = symbol + " 1h Price change is over +" + df2.format(pc24hf) + "%";
                     notifyText = name + " Current price is : " + df2.format(price);
                     showNotification(context, notifyTitle, notifyText);
                     //stopAlert(context);
@@ -257,7 +251,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
             //24H Change is Down
             case 3:
                 if (pc24hf < userValueDB) {
-                    notifyTitle = symbol + " 24h Price change is down " + df2.format(pc24hf) + "%";
+                    notifyTitle = symbol + " 1h Price change is down " + df2.format(pc24hf) + "%";
                     notifyText = name + " Current price is : $" + df2.format(price);
                     showNotification(context, notifyTitle, notifyText);
                     //stopAlert(context);

@@ -99,11 +99,11 @@ public class ChoseCurrencyFragment extends Fragment {
                     if(element.getSymbol().equals(selectedSymbol)){
 
                         Log.i("CurrentPrice", element.getSymbol() + " Currenct Price is: "+ element.getPrice());
-                        Log.i("Pct24", element.getSymbol() + " Pct is: "+ element.getPc24h());
+                        Log.i("Pct24", element.getSymbol() + " Pct is: "+ element.getPc1h());
 
 
                         selectedCoinCurrPrice.edit().putFloat("selectedCoinCurrPrice", (float) element.getPrice()).apply();
-                        selectedCoinPC24h.edit().putFloat("selectedCoinPC24h", (float)element.getPc24h()).apply();
+                        selectedCoinPC24h.edit().putFloat("selectedCoinPC24h", (float)element.getPc1h()).apply();
 
                         float currentPrice = selectedCoinCurrPrice.getFloat("selectedCoinCurrPrice", 0);
                         float pc24h = selectedCoinPC24h.getFloat("selectedCoinPC24h", 0);
@@ -134,7 +134,7 @@ public class ChoseCurrencyFragment extends Fragment {
     private void getCurrencyDataNomics(){
 
         loadingPBAlert.setVisibility(View.VISIBLE);
-        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&interval=1d&per-page=100&page=1";
+        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&interval=1h,1d&per-page=100&page=1";
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
@@ -146,18 +146,18 @@ public class ChoseCurrencyFragment extends Fragment {
                     String name = dataObj.getString("name");
                     String symbol = dataObj.getString("symbol");
                     double price = dataObj.getDouble("price");
-                    double pc24h;
+                    double pc1h;
 
                     int size = dataObj.length();
                     //JSONObject oneDay = dataObj.getJSONObject("1d");
-                    if(dataObj.has("1d")){
-                        pc24h = dataObj.getJSONObject("1d").getDouble("price_change_pct") *100;
+                    if(dataObj.has("1h")){
+                        pc1h = dataObj.getJSONObject("1h").getDouble("price_change_pct") *100;
                     } else {
-                        pc24h = 0;
+                        pc1h = 0;
                     }
 
 
-                    currencyRVModelArrayList.add(new CurrencyRVModel(symbol, name, price, pc24h));
+                    currencyRVModelArrayList.add(new CurrencyRVModel(symbol, name, price, pc1h));
                     coinArrayList.add(symbol);
 
                     if(i==20){
