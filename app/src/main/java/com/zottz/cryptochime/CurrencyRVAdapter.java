@@ -162,9 +162,9 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
     private void setTVcolor(TextView textView, double value ){
         if (value < 0){
             //textView.setTextColor(Color.parseColor("#FFF"));
-            textView.setTextColor(ContextCompat.getColor(context, R.color.green));
-        } else {
             textView.setTextColor(ContextCompat.getColor(context, R.color.red));
+        } else {
+            textView.setTextColor(ContextCompat.getColor(context, R.color.green));
         }
     }
 
