@@ -162,6 +162,20 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new InstructionFragment()).commit();
     }
 
+    public String bigValueCurrency(double value){
+        DecimalFormat df1 = new DecimalFormat("#.#");
+        String stringValue = null;
+      if (value >= 1000000000){
+          stringValue = "$"+ df1.format(value / 1000000000) + "B";
+      } else if (value >= 1000000){
+          stringValue = "$"+ df1.format(value / 1000000) + "M";
+      } else {
+          stringValue = "$"+ (int)(value / 1000000) + "M";
+      }
+
+      return stringValue;
+    }
+
 
 
 

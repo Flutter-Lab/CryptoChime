@@ -11,9 +11,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="24dp"
-        tools:layout_editor_absoluteY="-137dp"
-        >
+        tools:layout_editor_absoluteX="34dp"
+        tools:layout_editor_absoluteY="43dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -24,10 +23,10 @@
                 android:id="@+id/htuHeadingTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:text="How to Use?"
                 android:textSize="22dp"
                 android:textStyle="bold"
-                android:layout_marginBottom="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -65,7 +64,7 @@
                 android:id="@+id/qTwoTV"
                 style="@style/howToUseQ"
                 android:layout_marginTop="50dp"
-                android:text="2. How to add currency in favorite list?"
+                android:text="2. How to delete from favorite or alert list?"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +83,7 @@
                 android:layout_width="280dp"
                 android:layout_height="414dp"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/add_to_fav_guide"
+                android:src="@drawable/remove_fav_or_alert"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detailTwoTV" />

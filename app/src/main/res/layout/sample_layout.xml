@@ -7,8 +7,6 @@
     app:cardBackgroundColor="#FFFFFF">
 
 
-
-
     <com.chauthai.swipereveallayout.SwipeRevealLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
@@ -47,49 +45,139 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="4dp"
-                android:paddingVertical="7dp"
+                android:paddingVertical="2dp"
                 >
+
+
 
                 <ImageView
                     android:id="@+id/logo_imageView"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginRight="15dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
                     app:srcCompat="@drawable/ic_favorite" />
 
 
-                <TextView
-                    android:id="@+id/symbolTextView"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Symbol"
-                    android:layout_toRightOf="@id/logo_imageView"
-                    android:textColor="#070707"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:layout_toEndOf="@id/logo_imageView"
+                    android:layout_centerVertical="true"
+                    >
 
-                <TextView
-                    android:id="@+id/nameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/symbolTextView"
-                    android:layout_toRightOf="@id/logo_imageView"
-                    android:text="Name"
-                    android:textColor="#424343"
-                    android:textSize="12sp"
 
-                    />
+                    <TextView
+                        android:id="@+id/nameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name"
+                        android:textColor="#424343"
+                        android:textSize="12sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/symbolTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Symbol"
+                        android:textColor="#070707"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+
+
+                </LinearLayout>
+
+
+
+
+
 
                 <TextView
                     android:id="@+id/priceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
                     android:text="Price"
                     android:textColor="#0A0B0B" />
+
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentEnd="true"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="right"
+                        >
+
+                        <TextView
+                            android:id="@+id/pc1HTextView"
+                            android:text="+3.25%"
+                            style="@style/small_text" />
+                        <TextView
+                            android:id="@+id/pc1DTextView"
+                            android:text="+0.52%"
+                            style="@style/small_text" />
+                        <TextView
+                            android:id="@+id/pc7dTextView"
+                            android:text="-14.23%"
+                            style="@style/small_text" />
+                        <TextView
+                            android:id="@+id/capTextView"
+                            android:text="$919.3B"
+                            style="@style/small_text" />
+                        <TextView
+                            android:id="@+id/volumeTextView"
+                            android:text="$36.1B"
+                            style="@style/small_text" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            android:text="1H"
+                            style="@style/small_text" />
+                        <TextView
+                            android:text="24H"
+                            style="@style/small_text" />
+                        <TextView
+                            android:text="7D"
+                            style="@style/small_text" />
+                        <TextView
+                            android:text="Cap"
+                            style="@style/small_text" />
+                        <TextView
+                            android:text="Vol"
+                            style="@style/small_text" />
+
+
+                    </LinearLayout>
+
+
+
+
+
+                </LinearLayout>
 
 
             </RelativeLayout>

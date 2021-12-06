@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,7 +18,7 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 import java.util.ArrayList;
 
 
-public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.MyViewHolder>{
+public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.MyViewHolder> {
 
     MainActivity mainActivity = new MainActivity();
 
@@ -36,15 +38,14 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         this.context = context;
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
 
     }
-
 
 
     @NonNull
@@ -68,7 +69,24 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
 
         holder.symbolTextView.setText(currencyRVModel.getSymbol());
         holder.nameTextView.setText(currencyRVModel.getName());
-        holder.priceTextView.setText("$"+mainActivity.dynDF(currencyRVModel.getPrice()).format(currencyRVModel.getPrice()));
+        holder.priceTextView.setText(String.format("$%s", mainActivity.dynDF(currencyRVModel.getPrice()).format(currencyRVModel.getPrice())));
+
+        holder.pc1hTextView.setText(String.format("%s%%", MainActivity.df2.format(currencyRVModel.getPc1h())));
+        setTVcolor(holder.pc1hTextView, currencyRVModel.getPc1h());
+
+        holder.pc1dTextView.setText(String.format("%s%%", MainActivity.df2.format(currencyRVModel.getPc24h())));
+        setTVcolor(holder.pc1dTextView, currencyRVModel.getPc24h());
+
+        holder.pc7dTextView.setText(String.format("%s%%", MainActivity.df2.format(currencyRVModel.getPc7d())));
+        setTVcolor(holder.pc7dTextView, currencyRVModel.getPc7d());
+
+        //holder.capTextView.setText(String.valueOf(currencyRVModel.getCap()));
+        holder.capTextView.setText(mainActivity.bigValueCurrency(currencyRVModel.getCap()));
+
+        //holder.volumeTextView.setText(String.valueOf(currencyRVModel.getVol()));
+        holder.volumeTextView.setText(mainActivity.bigValueCurrency(currencyRVModel.getVol()));
+
+
 
         //Load Coin Logo Image to RecycleView
         String urlString = currencyRVModel.getLogoURL();
@@ -83,11 +101,10 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
     }
 
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         //Declare variable fro Views // Which we will see on sample_layout
-        TextView symbolTextView, nameTextView, priceTextView;
+        TextView symbolTextView, nameTextView, priceTextView, pc1hTextView, pc1dTextView, pc7dTextView, capTextView, volumeTextView ;
         ImageView logoImage;
 
         private SwipeRevealLayout swipeRevealLayout;
@@ -101,11 +118,17 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
             nameTextView = itemView.findViewById(R.id.nameTextView);
             priceTextView = itemView.findViewById(R.id.priceTextView);
             logoImage = itemView.findViewById(R.id.logo_imageView);
+            pc1hTextView = itemView.findViewById(R.id.pc1HTextView);
+            pc1dTextView = itemView.findViewById(R.id.pc1DTextView);
+            pc7dTextView = itemView.findViewById(R.id.pc7dTextView);
+            capTextView = itemView.findViewById(R.id.capTextView);
+            volumeTextView = itemView.findViewById(R.id.volumeTextView);
+
 
             swipeRevealLayout = itemView.findViewById(R.id.swipe_layout);
             addToFavTextview = itemView.findViewById(R.id.txtAddToFav);
 
-            if (currencyRVModelArrayList.size() < 95){
+            if (currencyRVModelArrayList.size() < 95) {
                 addToFavTextview.setText("Remove favorite");
                 addToFavTextview.setBackgroundResource(R.color.red);
             } else {
@@ -118,15 +141,14 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
                 @Override
                 public void onClick(View view) {
 
-                    if (listener != null){
+                    if (listener != null) {
                         int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION){
+                        if (position != RecyclerView.NO_POSITION) {
                             listener.onItemClick(position);
 //                            String symbol = currencyRVModelArrayList.get(position).getSymbol();
                             try {
                                 viewBinderHelper.closeLayout(String.valueOf(currencyRVModelArrayList.get(position).getSymbol()));
-                            } catch (Exception e){
-
+                            } catch (Exception e) {
                             }
                         }
                     }
@@ -134,6 +156,15 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
             });
 
 
+        }
+    }
+
+    private void setTVcolor(TextView textView, double value ){
+        if (value < 0){
+            //textView.setTextColor(Color.parseColor("#FFF"));
+            textView.setTextColor(ContextCompat.getColor(context, R.color.green));
+        } else {
+            textView.setTextColor(ContextCompat.getColor(context, R.color.red));
         }
     }
 

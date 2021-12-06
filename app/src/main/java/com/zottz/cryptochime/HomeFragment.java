@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
     private void getCurrencyDataNomics() {
 
         loadingPB.setVisibility(View.VISIBLE);
-        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&per-page=100&page=1";
+        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&interval=1h,1d,7d&per-page=100&page=1";
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
@@ -132,8 +132,23 @@ public class HomeFragment extends Fragment {
                     String symbol = dataObj.getString("symbol");
                     double price = dataObj.getDouble("price");
                     String urlString = dataObj.getString("logo_url");
+                    double marketCap = dataObj.getDouble("market_cap");
 
-                    currencyRVModalArrayList.add(new CurrencyRVModel(symbol, name, urlString, price));
+                    JSONObject pc1hObj = dataObj.getJSONObject("1h");
+                    double pc1h = pc1hObj.getDouble("price_change_pct") * 100;
+
+
+                    JSONObject pc24hObj = dataObj.getJSONObject("1d");
+                    double pc24h = pc24hObj.getDouble("price_change_pct") * 100;
+                    double volume = pc24hObj.getDouble("volume");
+
+                    JSONObject pc7dObj = dataObj.getJSONObject("7d");
+                    double pc7d = pc7dObj.getDouble("price_change_pct") * 100;
+
+
+
+                    //currencyRVModalArrayList.add(new CurrencyRVModel(symbol, name, urlString, price));
+                    currencyRVModalArrayList.add(new CurrencyRVModel(symbol, name, urlString, price, pc1h, pc24h, pc7d, marketCap, volume));
                     symbolArrayList.add(symbol);
 
 

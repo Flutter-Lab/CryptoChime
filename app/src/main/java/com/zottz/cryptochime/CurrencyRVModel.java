@@ -1,46 +1,59 @@
 package com.zottz.cryptochime;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class CurrencyRVModel implements Parcelable {
+public class CurrencyRVModel {
 
     String symbol, name, logoURL;
-    double price, pc1h;
+    double price, pc1h, pc24h, pc7d, cap, vol;
 
-    protected CurrencyRVModel(Parcel in) {
-        symbol = in.readString();
-        name = in.readString();
-        price = in.readDouble();
-        pc1h = in.readDouble();
-        logoURL = in.readString();
+    public double getPc24h() {
+        return pc24h;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(symbol);
-        dest.writeString(name);
-        dest.writeDouble(price);
-        dest.writeDouble(pc1h);
-        dest.writeString(logoURL);
+    public double getPc7d() {
+        return pc7d;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public double getCap() {
+        return cap;
     }
 
-    public static final Creator<CurrencyRVModel> CREATOR = new Creator<CurrencyRVModel>() {
-        @Override
-        public CurrencyRVModel createFromParcel(Parcel in) {
-            return new CurrencyRVModel(in);
-        }
+    public double getVol() {
+        return vol;
+    }
 
-        @Override
-        public CurrencyRVModel[] newArray(int size) {
-            return new CurrencyRVModel[size];
-        }
-    };
+    //    protected CurrencyRVModel(Parcel in) {
+//        symbol = in.readString();
+//        name = in.readString();
+//        price = in.readDouble();
+//        pc1h = in.readDouble();
+//        logoURL = in.readString();
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(symbol);
+//        dest.writeString(name);
+//        dest.writeDouble(price);
+//        dest.writeDouble(pc1h);
+//        dest.writeString(logoURL);
+//    }
+
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+
+//    public static final Creator<CurrencyRVModel> CREATOR = new Creator<CurrencyRVModel>() {
+//        @Override
+//        public CurrencyRVModel createFromParcel(Parcel in) {
+//            return new CurrencyRVModel(in);
+//        }
+//
+//        @Override
+//        public CurrencyRVModel[] newArray(int size) {
+//            return new CurrencyRVModel[size];
+//        }
+//    };
 
     public String getSymbol() {
         return symbol;
@@ -94,5 +107,17 @@ public class CurrencyRVModel implements Parcelable {
         this.name = name;
         this.logoURL = logoURL;
         this.price = price;
+    }
+
+    public CurrencyRVModel(String symbol, String name, String logoURL, double price, double pc1h, double pc24h, double pc7d, double cap, double vol) {
+        this.symbol = symbol;
+        this.name = name;
+        this.logoURL = logoURL;
+        this.price = price;
+        this.pc1h = pc1h;
+        this.pc24h = pc24h;
+        this.pc7d = pc7d;
+        this.cap = cap;
+        this.vol = vol;
     }
 }
