@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="1dp"
     app:cardBackgroundColor="#FFFFFF">
 
-
-    <com.chauthai.swipereveallayout.SwipeRevealLayout
-        android:id="@+id/swipe_layout"
+    <!-- FrameLayout to stack the swipe action and main content -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:mode="same_level"
-        app:dragEdge="right">
+        android:layout_height="match_parent">
 
+        <!-- Background action view, e.g., 'Add to Favorite' -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:id="@+id/back_layout_s"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/red">
 
             <TextView
                 android:id="@+id/txtAddToFav"
@@ -27,28 +30,23 @@
                 android:paddingHorizontal="5dp"
                 android:textColor="@color/white"
                 android:textSize="13dp"
-                android:textStyle="bold"
-                />
-
-
-
+                android:textStyle="bold"/>
         </LinearLayout>
 
-        <!-- Your main layout here -->
-        <FrameLayout
+        <!-- Foreground content view -->
+        <LinearLayout
+            android:id="@+id/front_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/white">
 
             <RelativeLayout
                 android:id="@+id/coinInfoBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="4dp"
-                android:paddingVertical="2dp"
-                >
-
-
+                android:paddingVertical="2dp">
 
                 <ImageView
                     android:id="@+id/logo_imageView"
@@ -59,15 +57,12 @@
                     android:layout_marginRight="15dp"
                     app:srcCompat="@drawable/ic_favorite" />
 
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_toEndOf="@id/logo_imageView"
-                    android:layout_centerVertical="true"
-                    >
-
+                    android:layout_centerVertical="true">
 
                     <TextView
                         android:id="@+id/nameTextView"
@@ -75,8 +70,7 @@
                         android:layout_height="wrap_content"
                         android:text="Name"
                         android:textColor="#424343"
-                        android:textSize="12sp"
-                        />
+                        android:textSize="12sp"/>
 
                     <TextView
                         android:id="@+id/symbolTextView"
@@ -85,16 +79,8 @@
                         android:text="Symbol"
                         android:textColor="#070707"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
-
-
-
+                        android:textStyle="bold"/>
                 </LinearLayout>
-
-
-
-
-
 
                 <TextView
                     android:id="@+id/priceTextView"
@@ -104,96 +90,66 @@
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:text="Price"
-                    android:textColor="#0A0B0B" />
-
-
-
+                    android:textColor="#0A0B0B"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_alignParentEnd="true"
-                    >
+                    android:layout_alignParentEnd="true">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginEnd="10dp"
-                        android:gravity="right"
-                        >
+                        android:gravity="right">
 
                         <TextView
                             android:id="@+id/pc1HTextView"
                             android:text="+3.25%"
-                            style="@style/small_text" />
+                            style="@style/small_text"/>
                         <TextView
                             android:id="@+id/pc1DTextView"
                             android:text="+0.52%"
-                            style="@style/small_text" />
+                            style="@style/small_text"/>
                         <TextView
                             android:id="@+id/pc7dTextView"
                             android:text="-14.23%"
-                            style="@style/small_text" />
+                            style="@style/small_text"/>
                         <TextView
                             android:id="@+id/capTextView"
                             android:text="$919.3B"
-                            style="@style/small_text" />
+                            style="@style/small_text"/>
                         <TextView
                             android:id="@+id/volumeTextView"
                             android:text="$36.1B"
-                            style="@style/small_text" />
-
-
+                            style="@style/small_text"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
 
                         <TextView
                             android:text="1H"
-                            style="@style/small_text" />
+                            style="@style/small_text"/>
                         <TextView
                             android:text="24H"
-                            style="@style/small_text" />
+                            style="@style/small_text"/>
                         <TextView
                             android:text="7D"
-                            style="@style/small_text" />
+                            style="@style/small_text"/>
                         <TextView
                             android:text="Cap"
-                            style="@style/small_text" />
+                            style="@style/small_text"/>
                         <TextView
                             android:text="Vol"
-                            style="@style/small_text" />
-
-
+                            style="@style/small_text"/>
                     </LinearLayout>
-
-
-
-
-
                 </LinearLayout>
-
-
             </RelativeLayout>
-
-
-
-        </FrameLayout>
-
-
-
-    </com.chauthai.swipereveallayout.SwipeRevealLayout>
-
-
+        </LinearLayout>
+    </FrameLayout>
 </androidx.cardview.widget.CardView>
-
-
-
-
-

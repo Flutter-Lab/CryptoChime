@@ -11,9 +11,11 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/sample_layout"
         android:padding="13dp"
-        android:visibility="visible" />
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:listitem="@layout/sample_layout" />
 
     <ProgressBar
         android:id="@+id/idPBLoading"

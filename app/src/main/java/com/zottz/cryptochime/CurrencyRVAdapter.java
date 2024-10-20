@@ -12,29 +12,17 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.chauthai.swipereveallayout.SwipeRevealLayout;
-import com.chauthai.swipereveallayout.ViewBinderHelper;
 
 import java.util.ArrayList;
 
-
 public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.MyViewHolder> {
 
-    MainActivity mainActivity = new MainActivity();
-
+    private final ArrayList<CurrencyRVModel> currencyRVModelArrayList;
+    private final Context context;
     private OnItemClickListener mListener;
 
-    //Mention data which I want to show in RV
-    CurrencyRVModel currencyRVModel;
-    ArrayList<CurrencyRVModel> currencyRVModelArrayList;
-    Context context;
-
-    //Swipe related variable
-    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
-
-    //Generated Constructor for all Data
-    public CurrencyRVAdapter(ArrayList<CurrencyRVModel> currencyRVModalArrayList, Context context) {
-        this.currencyRVModelArrayList = currencyRVModalArrayList;
+    public CurrencyRVAdapter(ArrayList<CurrencyRVModel> currencyRVModelArrayList, Context context) {
+        this.currencyRVModelArrayList = currencyRVModelArrayList;
         this.context = context;
     }
 
@@ -44,32 +32,21 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
-
     }
-
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //Inflate sample layout
         View view = LayoutInflater.from(context).inflate(R.layout.sample_layout, parent, false);
-
         return new MyViewHolder(view, mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        // Set all data into views // Which data we got from MyViewHolder
-        currencyRVModel = currencyRVModelArrayList.get(position);
-
-        //Swipe Related code
-        viewBinderHelper.setOpenOnlyOne(true);
-        viewBinderHelper.bind(holder.swipeRevealLayout, String.valueOf(currencyRVModelArrayList.get(position).getSymbol()));
-        viewBinderHelper.closeLayout(String.valueOf(currencyRVModelArrayList.get(position).getSymbol()));
-
+        CurrencyRVModel currencyRVModel = currencyRVModelArrayList.get(position);
         holder.symbolTextView.setText(currencyRVModel.getSymbol());
         holder.nameTextView.setText(currencyRVModel.getName());
-        holder.priceTextView.setText(String.format("$%s", mainActivity.dynDF(currencyRVModel.getPrice()).format(currencyRVModel.getPrice())));
+        holder.priceTextView.setText(String.format("$%s", MainActivity.dynDF(currencyRVModel.getPrice()).format(currencyRVModel.getPrice())));
 
         holder.pc1hTextView.setText(String.format("%s%%", MainActivity.df2.format(currencyRVModel.getPc1h())));
         setTVcolor(holder.pc1hTextView, currencyRVModel.getPc1h());
@@ -80,19 +57,11 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         holder.pc7dTextView.setText(String.format("%s%%", MainActivity.df2.format(currencyRVModel.getPc7d())));
         setTVcolor(holder.pc7dTextView, currencyRVModel.getPc7d());
 
-        //holder.capTextView.setText(String.valueOf(currencyRVModel.getCap()));
-        holder.capTextView.setText(mainActivity.bigValueCurrency(currencyRVModel.getCap()));
+        holder.capTextView.setText(MainActivity.bigValueCurrency(currencyRVModel.getCap()));
+        holder.volumeTextView.setText(MainActivity.bigValueCurrency(currencyRVModel.getVol()));
 
-        //holder.volumeTextView.setText(String.valueOf(currencyRVModel.getVol()));
-        holder.volumeTextView.setText(mainActivity.bigValueCurrency(currencyRVModel.getVol()));
-
-
-
-        //Load Coin Logo Image to RecycleView
-        String urlString = currencyRVModel.getLogoURL();
-        Glide.with(context).load(urlString).into(holder.logoImage);
-
-
+        // Load Coin Logo Image to RecyclerView
+        Glide.with(context).load(currencyRVModel.getLogoURL()).into(holder.logoImage);
     }
 
     @Override
@@ -100,20 +69,13 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
         return currencyRVModelArrayList.size();
     }
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        //Declare variable fro Views // Which we will see on sample_layout
-        TextView symbolTextView, nameTextView, priceTextView, pc1hTextView, pc1dTextView, pc7dTextView, capTextView, volumeTextView ;
+        TextView symbolTextView, nameTextView, priceTextView, pc1hTextView, pc1dTextView, pc7dTextView, capTextView, volumeTextView;
         ImageView logoImage;
-
-        private SwipeRevealLayout swipeRevealLayout;
-        private TextView addToFavTextview;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
 
-            // Find all views from given itemView / We got sample_layout as itemView from onCreateViewHolder using Inflater
             symbolTextView = itemView.findViewById(R.id.symbolTextView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
             priceTextView = itemView.findViewById(R.id.priceTextView);
@@ -124,49 +86,23 @@ public class CurrencyRVAdapter extends RecyclerView.Adapter<CurrencyRVAdapter.My
             capTextView = itemView.findViewById(R.id.capTextView);
             volumeTextView = itemView.findViewById(R.id.volumeTextView);
 
-
-            swipeRevealLayout = itemView.findViewById(R.id.swipe_layout);
-            addToFavTextview = itemView.findViewById(R.id.txtAddToFav);
-
-            if (currencyRVModelArrayList.size() < 95) {
-                addToFavTextview.setText("Remove favorite");
-                addToFavTextview.setBackgroundResource(R.color.red);
-            } else {
-                addToFavTextview.setBackgroundResource(R.color.green);
-            }
-
-
-            //Swipe button click listener
-            addToFavTextview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    if (listener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-//                            String symbol = currencyRVModelArrayList.get(position).getSymbol();
-                            try {
-                                viewBinderHelper.closeLayout(String.valueOf(currencyRVModelArrayList.get(position).getSymbol()));
-                            } catch (Exception e) {
-                            }
-                        }
+            // Item click listener
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(position);
                     }
                 }
             });
-
-
         }
     }
 
-    private void setTVcolor(TextView textView, double value ){
-        if (value < 0){
-            //textView.setTextColor(Color.parseColor("#FFF"));
+    private void setTVcolor(TextView textView, double value) {
+        if (value < 0) {
             textView.setTextColor(ContextCompat.getColor(context, R.color.red));
         } else {
             textView.setTextColor(ContextCompat.getColor(context, R.color.green));
         }
     }
-
-
 }

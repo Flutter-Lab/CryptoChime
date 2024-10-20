@@ -101,7 +101,12 @@ public class NotificationBroadcast extends BroadcastReceiver {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent  = PendingIntent.getActivity(
+                context,
+                1,
+                intent,
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         Notification notification = new NotificationCompat.Builder(context, NotifyApp.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_dollar)
@@ -127,8 +132,12 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
         AlarmManager aManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         Intent sintent = new Intent(context, NotificationBroadcast.class);
-        PendingIntent intent = PendingIntent.getBroadcast(context, 0, sintent, PendingIntent.FLAG_UPDATE_CURRENT);
-        aManager.cancel(intent);
+        PendingIntent intent = PendingIntent.getBroadcast(
+                context,
+                0,
+                sintent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
     }
 
     private void getDataAndNotify(Context context) {

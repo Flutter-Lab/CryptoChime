@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(context, NotificationBroadcast.class );
         intent.putExtra("alertId", alertId);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent,PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         //prefNotify.edit().putInt("isNotified", 0).apply();
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.mainContainer, new InstructionFragment()).commit();
     }
 
-    public String bigValueCurrency(double value){
+    public static String bigValueCurrency(double value){
         DecimalFormat df1 = new DecimalFormat("#.#");
         String stringValue = null;
       if (value >= 1000000000){

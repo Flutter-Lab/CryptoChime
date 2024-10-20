@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="0dp">
 
-    <com.chauthai.swipereveallayout.SwipeRevealLayout
-        android:id="@+id/swipe_layout_alert"
+    <!-- FrameLayout to stack views for manual swipe handling -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:mode="same_level"
-        app:dragEdge="right">
+        android:layout_height="match_parent">
 
+        <!-- The back view for the swipe action (e.g., remove alert) -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/back_layout"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            >
-
+            android:gravity="center"
+            android:background="@color/red"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txtToRemoveAlert"
@@ -27,27 +29,24 @@
                 android:gravity="center"
                 android:paddingHorizontal="5dp"
                 android:textColor="@color/white"
-                android:textSize="13dp"
-                android:textStyle="bold"
-                android:background="@color/red"
-                />
-
+                android:textSize="13sp"
+                android:textStyle="bold"/>
         </LinearLayout>
 
+        <!-- The front view containing the main content -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/front_layout"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            >
-
+            android:background="@color/white">
 
             <RelativeLayout
                 android:id="@+id/coinInfoBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="5dp"
-                android:paddingVertical="7dp"
-                >
+                android:paddingVertical="7dp">
 
                 <ImageView
                     android:id="@+id/alertIndicator"
@@ -56,8 +55,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/ic_alert_up" />
-
+                    android:src="@drawable/ic_alert_up"/>
 
                 <TextView
                     android:id="@+id/symbolTextView"
@@ -66,20 +64,18 @@
                     android:text="Symbol"
                     android:textColor="#070707"
                     android:textSize="12sp"
-                    android:layout_toRightOf="@id/alertIndicator"
-                    />
+                    android:layout_toRightOf="@id/alertIndicator"/>
 
                 <TextView
                     android:id="@+id/alertTypeNameTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/symbolTextView"
+                    android:layout_below="@id/symbolTextView"
                     android:text="24H change above 10%"
                     android:textStyle="bold"
                     android:textColor="#424343"
                     android:textSize="15sp"
-                    android:layout_toRightOf="@id/alertIndicator"
-                    />
+                    android:layout_toRightOf="@id/alertIndicator"/>
 
                 <TextView
                     android:id="@+id/loudAlertText"
@@ -88,24 +84,8 @@
                     android:text=""
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    />
-
-
-
+                    android:layout_marginRight="20dp"/>
             </RelativeLayout>
-
-
-
         </LinearLayout>
-
-
-
-
-
-    </com.chauthai.swipereveallayout.SwipeRevealLayout>
-
-
-
-
+    </FrameLayout>
 </androidx.cardview.widget.CardView>
