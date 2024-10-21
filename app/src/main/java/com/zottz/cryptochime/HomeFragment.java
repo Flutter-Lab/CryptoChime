@@ -18,35 +18,28 @@ import com.zottz.cryptochime.SetAlertActivity.AlertDB.MainDatabase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import okio.ByteString;
-
 public class HomeFragment extends Fragment {
 
-    // Declare RecyclerView
     RecyclerView currenciesRV;
-    // Declare Adapter
     CurrencyRVAdapter currencyRVAdapter;
-    // Declare data to show in RecyclerView
     public ArrayList<CurrencyRVModel> currencyRVModalArrayList;
     public static ArrayList<CurrencyRVModel> favRVModelArraylist;
     ProgressBar loadingPB;
-    // Declare ArrayList for symbol search
     public ArrayList<String> symbolArrayList;
 
     MainDatabase db;
     List<Favorite> favoriteItemList;
-    private WebSocket webSocket;
-    private OkHttpClient client;
+    private WebSocketClient webSocketClient;
 
     @Nullable
     @Override
@@ -70,13 +63,11 @@ public class HomeFragment extends Fragment {
     private void getRVData() {
         currenciesRV.setHasFixedSize(true);
         currencyRVModalArrayList = new ArrayList<>();
-        // Set up Adapter
         currencyRVAdapter = new CurrencyRVAdapter(currencyRVModalArrayList, getContext());
         currenciesRV.setAdapter(currencyRVAdapter);
         currenciesRV.setLayoutManager(new LinearLayoutManager(getContext()));
         favRVModelArraylist = new ArrayList<>();
 
-        // Set OnClick RV Item
         currencyRVAdapter.setOnItemClickListener(position -> {
             String adapterCurrencySymbol = currencyRVModalArrayList.get(position).getSymbol();
             String adapterCurrencyName = currencyRVModalArrayList.get(position).getName();
@@ -105,83 +96,77 @@ public class HomeFragment extends Fragment {
     }
 
     private void connectWebSocket() {
-        client = new OkHttpClient();
-        Request request = new Request.Builder().url("wss://stream.binance.com:9443/ws/!ticker@arr").build();
-        webSocket = client.newWebSocket(request, new BinanceWebSocketListener());
-        client.dispatcher().executorService().shutdown();
-    }
-
-    private final class BinanceWebSocketListener extends WebSocketListener {
-        @Override
-        public void onOpen(WebSocket webSocket, okhttp3.Response response) {
-            getActivity().runOnUiThread(() -> loadingPB.setVisibility(View.VISIBLE));
+        URI uri;
+        try {
+            uri = new URI("wss://stream.binance.com:9443/ws/!ticker@arr");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
         }
 
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            getActivity().runOnUiThread(() -> {
-                loadingPB.setVisibility(View.GONE);
-                try {
-                    JSONArray jsonArray = new JSONArray(text);
-                    // Use a temporary map to ensure stable order by symbol
-                    LinkedHashMap<Object, Object> tempMap = new LinkedHashMap<>();
+        webSocketClient = new WebSocketClient(uri) {
+            @Override
+            public void onOpen(ServerHandshake handshakedata) {
+                getActivity().runOnUiThread(() -> loadingPB.setVisibility(View.VISIBLE));
+            }
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject dataObj = jsonArray.getJSONObject(i);
-                        String symbol = dataObj.getString("s");
-                        double price = dataObj.getDouble("c");
-                        String name = symbol; // Binance does not provide the full name
-                        String urlString = ""; // Binance stream does not provide an image URL
+            @Override
+            public void onMessage(String message) {
+                getActivity().runOnUiThread(() -> {
+                    loadingPB.setVisibility(View.GONE);
+                    try {
+                        JSONArray jsonArray = new JSONArray(message);
+                        LinkedHashMap<Object, Object> tempMap = new LinkedHashMap<>();
 
-                        // Filter to include only USDT pairs
-                        if (symbol.endsWith("USDT")) {
-                            tempMap.put(symbol, new CurrencyRVModel(symbol, name, urlString, price, 0.0, 0.0, 0.0, 0.0, 0.0));
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject dataObj = jsonArray.getJSONObject(i);
+                            String symbol = dataObj.getString("s");
+                            double price = dataObj.getDouble("c");
+                            String name = symbol;
+                            String urlString = "";
+
+                            if (symbol.endsWith("USDT")) {
+                                tempMap.put(symbol, new CurrencyRVModel(symbol, name, urlString, price, 0.0, 0.0, 0.0, 0.0, 0.0));
+                            }
                         }
+
+                        currencyRVModalArrayList.clear();
+                        symbolArrayList.clear();
+
+                        for (Map.Entry<Object, Object> entry : tempMap.entrySet()) {
+                            currencyRVModalArrayList.add((CurrencyRVModel) entry.getValue());
+                            symbolArrayList.add((String) entry.getKey());
+                        }
+
+                        currencyRVAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getContext(), "Failed to parse WebSocket data", Toast.LENGTH_SHORT).show();
                     }
+                });
+            }
 
-                    // Clear old data and maintain a stable serial order
-                    currencyRVModalArrayList.clear();
-                    symbolArrayList.clear();
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+                getActivity().runOnUiThread(() -> loadingPB.setVisibility(View.GONE));
+            }
 
-                    // Add all items from the map in stable order
-                    for (Map.Entry<Object, Object> entry : tempMap.entrySet()) {
-                        currencyRVModalArrayList.add((CurrencyRVModel) entry.getValue());
-                        symbolArrayList.add((String) entry.getKey());
-                    }
-
-                    currencyRVAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getContext(), "Failed to parse WebSocket data", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        @Override
-        public void onMessage(WebSocket webSocket, ByteString bytes) {
-            onMessage(webSocket, bytes.utf8());
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(1000, null);
-            getActivity().runOnUiThread(() -> loadingPB.setVisibility(View.GONE));
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
-            getActivity().runOnUiThread(() -> {
-                loadingPB.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "WebSocket connection failed", Toast.LENGTH_SHORT).show();
-            });
-        }
+            @Override
+            public void onError(Exception ex) {
+                getActivity().runOnUiThread(() -> {
+                    loadingPB.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "WebSocket connection failed: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        };
+        webSocketClient.connect();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (webSocket != null) {
-            webSocket.close(1000, null);
+        if (webSocketClient != null) {
+            webSocketClient.close();
         }
     }
 }
