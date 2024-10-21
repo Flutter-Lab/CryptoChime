@@ -12,37 +12,41 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.zottz.cryptochime.FavoriteFragmentPkg.Favorite;
 import com.zottz.cryptochime.SetAlertActivity.AlertDB.MainDatabase;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
+import okio.ByteString;
 
 public class HomeFragment extends Fragment {
 
-    //Declare RecyclerView
+    // Declare RecyclerView
     RecyclerView currenciesRV;
-    //Declare Adapter
+    // Declare Adapter
     CurrencyRVAdapter currencyRVAdapter;
-    //Declare data which I want to show in RV
+    // Declare data to show in RecyclerView
     public ArrayList<CurrencyRVModel> currencyRVModalArrayList;
-
     public static ArrayList<CurrencyRVModel> favRVModelArraylist;
     ProgressBar loadingPB;
-    //Declare ArrayList for Alert search
+    // Declare ArrayList for symbol search
     public ArrayList<String> symbolArrayList;
 
     MainDatabase db;
     List<Favorite> favoriteItemList;
-
+    private WebSocket webSocket;
+    private OkHttpClient client;
 
     @Nullable
     @Override
@@ -51,55 +55,40 @@ public class HomeFragment extends Fragment {
         db = MainDatabase.getInstance(getActivity().getApplicationContext());
         favoriteItemList = db.favoriteDao().getAllFavorites();
 
-        //PickUp Coin list for AlertPage2
-        symbolArrayList = new ArrayList<String>();
+        symbolArrayList = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         currenciesRV = view.findViewById(R.id.recyclerView);
         loadingPB = view.findViewById(R.id.idPBLoading);
 
         getRVData();
-        getCurrencyDataNomics();
-
+        connectWebSocket();
 
         return view;
     }
 
-//    private void showToast(String message) {
-//        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-//    }
-
     private void getRVData() {
         currenciesRV.setHasFixedSize(true);
-        //loadingPB = findViewById(R.id.idPBLoading);
         currencyRVModalArrayList = new ArrayList<>();
-        //Send data to Adapter // After this create sample single view Layout
+        // Set up Adapter
         currencyRVAdapter = new CurrencyRVAdapter(currencyRVModalArrayList, getContext());
-        //Set the Adapter with RecyclerView
         currenciesRV.setAdapter(currencyRVAdapter);
-        //Set Layout Manager to RecyclerView
         currenciesRV.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        //FavRVModel Array List
         favRVModelArraylist = new ArrayList<>();
 
-
-        //Set OnClick RV Item
+        // Set OnClick RV Item
         currencyRVAdapter.setOnItemClickListener(position -> {
             String adapterCurrencySymbol = currencyRVModalArrayList.get(position).getSymbol();
             String adapterCurrencyName = currencyRVModalArrayList.get(position).getName();
             String adapterCurrencyURL = currencyRVModalArrayList.get(position).getLogoURL();
             double adapterCurrencyPrice = currencyRVModalArrayList.get(position).getPrice();
 
-
             ArrayList<String> favCurrencyList = new ArrayList<>();
-
-            //Save coin Name to Favorite DB Table
             Favorite favorite = new Favorite();
             List<Favorite> favoriteList = db.favoriteDao().getAllFavorites();
 
-            for (int i = 0; i < favoriteList.size(); i++) {
-                favCurrencyList.add(favoriteList.get(i).currencySymbol);
+            for (Favorite item : favoriteList) {
+                favCurrencyList.add(item.currencySymbol);
             }
             if (!favCurrencyList.contains(adapterCurrencySymbol)) {
                 favorite.currencyName = adapterCurrencyName;
@@ -108,84 +97,91 @@ public class HomeFragment extends Fragment {
                 favorite.currencyPrice = (float) adapterCurrencyPrice;
 
                 db.favoriteDao().insertFavorite(favorite);
-                Toast.makeText(getContext(), adapterCurrencySymbol + " is added to Favorite List", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), adapterCurrencySymbol + " added to Favorite List", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), adapterCurrencySymbol + " is already in Favorite List", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void connectWebSocket() {
+        client = new OkHttpClient();
+        Request request = new Request.Builder().url("wss://stream.binance.com:9443/ws/!ticker@arr").build();
+        webSocket = client.newWebSocket(request, new BinanceWebSocketListener());
+        client.dispatcher().executorService().shutdown();
+    }
 
-    private void getCurrencyDataNomics() {
+    private final class BinanceWebSocketListener extends WebSocketListener {
+        @Override
+        public void onOpen(WebSocket webSocket, okhttp3.Response response) {
+            getActivity().runOnUiThread(() -> loadingPB.setVisibility(View.VISIBLE));
+        }
 
-        loadingPB.setVisibility(View.VISIBLE);
-        String url = "https://api.nomics.com/v1/currencies/ticker?key=ecae4f8ae82014deed75f16f14d03f2c21a819b1&interval=1h,1d,7d&per-page=100&page=1";
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        @Override
+        public void onMessage(WebSocket webSocket, String text) {
+            getActivity().runOnUiThread(() -> {
+                loadingPB.setVisibility(View.GONE);
+                try {
+                    JSONArray jsonArray = new JSONArray(text);
+                    // Use a temporary map to ensure stable order by symbol
+                    LinkedHashMap<Object, Object> tempMap = new LinkedHashMap<>();
 
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, response -> {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject dataObj = jsonArray.getJSONObject(i);
+                        String symbol = dataObj.getString("s");
+                        double price = dataObj.getDouble("c");
+                        String name = symbol; // Binance does not provide the full name
+                        String urlString = ""; // Binance stream does not provide an image URL
 
-            loadingPB.setVisibility(View.GONE);
-            try {
-                for (int i = 0; i < response.length(); i++) {
-                    JSONObject dataObj = response.getJSONObject(i);
-                    String name = dataObj.getString("name");
-                    String symbol = dataObj.getString("symbol");
-                    double price = dataObj.getDouble("price");
-                    String urlString = dataObj.getString("logo_url");
-                    double marketCap = dataObj.getDouble("market_cap");
-
-                    JSONObject pc1hObj = dataObj.getJSONObject("1h");
-                    double pc1h = pc1hObj.getDouble("price_change_pct") * 100;
-
-
-                    JSONObject pc24hObj = dataObj.getJSONObject("1d");
-                    double pc24h = pc24hObj.getDouble("price_change_pct") * 100;
-                    double volume = pc24hObj.getDouble("volume");
-
-                    JSONObject pc7dObj = dataObj.getJSONObject("7d");
-                    double pc7d = pc7dObj.getDouble("price_change_pct") * 100;
-
-
-
-                    //currencyRVModalArrayList.add(new CurrencyRVModel(symbol, name, urlString, price));
-                    currencyRVModalArrayList.add(new CurrencyRVModel(symbol, name, urlString, price, pc1h, pc24h, pc7d, marketCap, volume));
-                    symbolArrayList.add(symbol);
-
-
-                    ArrayList<String> favCurrencyList = new ArrayList<>();
-                    Favorite favorite = new Favorite();
-                    List<Favorite> favoriteList = db.favoriteDao().getAllFavorites();
-
-
-                    //Make a list of DB Symbols
-                    for (int k = 0; k < favoriteList.size(); k++) {
-                        favCurrencyList.add(favoriteList.get(k).currencySymbol);
-                    }
-                    //If symbol is in DB then updady Symbol currency info to DB
-                    if (favCurrencyList.contains(symbol)) {
-                        favorite.favoriteID = favCurrencyList.indexOf(symbol)+1;
-                        favorite.currencyName = name;
-                        favorite.currencySymbol = symbol;
-                        favorite.currencyPrice = (float) price;
-                        favorite.currencyIconURL = urlString;
-
-                        db.favoriteDao().updateFavorite(favorite);
+                        // Filter to include only USDT pairs
+                        if (symbol.endsWith("USDT")) {
+                            tempMap.put(symbol, new CurrencyRVModel(symbol, name, urlString, price, 0.0, 0.0, 0.0, 0.0, 0.0));
+                        }
                     }
 
+                    // Clear old data and maintain a stable serial order
+                    currencyRVModalArrayList.clear();
+                    symbolArrayList.clear();
+
+                    // Add all items from the map in stable order
+                    for (Map.Entry<Object, Object> entry : tempMap.entrySet()) {
+                        currencyRVModalArrayList.add((CurrencyRVModel) entry.getValue());
+                        symbolArrayList.add((String) entry.getKey());
+                    }
+
+                    currencyRVAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Failed to parse WebSocket data", Toast.LENGTH_SHORT).show();
                 }
+            });
+        }
 
+        @Override
+        public void onMessage(WebSocket webSocket, ByteString bytes) {
+            onMessage(webSocket, bytes.utf8());
+        }
 
-                currencyRVAdapter.notifyDataSetChanged();
+        @Override
+        public void onClosing(WebSocket webSocket, int code, String reason) {
+            webSocket.close(1000, null);
+            getActivity().runOnUiThread(() -> loadingPB.setVisibility(View.GONE));
+        }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(getContext(), "Fail to extract json data..", Toast.LENGTH_SHORT).show();
-            }
-        }, error -> {
-            loadingPB.setVisibility(View.GONE);
-            Toast.makeText(getContext(), "Fail to get the data..", Toast.LENGTH_SHORT).show();
-        });
+        @Override
+        public void onFailure(WebSocket webSocket, Throwable t, okhttp3.Response response) {
+            getActivity().runOnUiThread(() -> {
+                loadingPB.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "WebSocket connection failed", Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
 
-        requestQueue.add(jsonArrayRequest);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (webSocket != null) {
+            webSocket.close(1000, null);
+        }
     }
 }
