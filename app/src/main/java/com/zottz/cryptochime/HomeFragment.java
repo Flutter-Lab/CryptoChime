@@ -1,5 +1,6 @@
 package com.zottz.cryptochime;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -46,7 +47,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        db = MainDatabase.getInstance(getActivity().getApplicationContext());
+        db = MainDatabase.getInstance(requireActivity().getApplicationContext());
         favoriteItemList = db.favoriteDao().getAllFavorites();
 
         symbolArrayList = new ArrayList<>();
@@ -115,10 +116,10 @@ public class HomeFragment extends Fragment {
         loadingPB.setVisibility(View.VISIBLE);
 
         // Create a new RequestQueue
-        RequestQueue queue = Volley.newRequestQueue(getContext());
+        RequestQueue queue = Volley.newRequestQueue(requireContext());
 
         // Create a JSON Object request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+        @SuppressLint("NotifyDataSetChanged") JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
                         JSONArray jsonArray = response.getJSONArray("data");
