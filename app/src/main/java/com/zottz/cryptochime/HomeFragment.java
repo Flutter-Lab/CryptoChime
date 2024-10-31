@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -42,11 +43,13 @@ public class HomeFragment extends Fragment {
 
     MainDatabase db;
     List<Favorite> favoriteItemList;
+//    RequestQueue queue = Volley.newRequestQueue(requireContext());
+    private final Handler handler = new Handler();
 
     @Nullable
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
         db = MainDatabase.getInstance(requireActivity().getApplicationContext());
         favoriteItemList = db.favoriteDao().getAllFavorites();
 
@@ -57,22 +60,28 @@ public class HomeFragment extends Fragment {
         loadingPB = view.findViewById(R.id.idPBLoading);
 
         getRVData();
-
-        // Fetch live data from CoinMarketCap and refresh periodically
         fetchLiveCryptoData();
 
-        final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                fetchLiveCryptoData();
-                handler.postDelayed(this, 15000); // Refresh every 15 seconds
+                if (isAdded()) {
+                    fetchLiveCryptoData();
+                    handler.postDelayed(this, 15000); // Refresh every 15 seconds
+                }
             }
         };
         handler.post(runnable);
 
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        handler.removeCallbacksAndMessages(null);
+    }
+
 
     private void getRVData() {
         currenciesRV.setHasFixedSize(true);
@@ -110,6 +119,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchLiveCryptoData() {
+//        if (!isAdded()) {
+//            return;
+//        }
         String url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
         String apiKey = "cf22e625-7f13-4277-857c-6c60021e50dd";  // Replace with your actual API key
 

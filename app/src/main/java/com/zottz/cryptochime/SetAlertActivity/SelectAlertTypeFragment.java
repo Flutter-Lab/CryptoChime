@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.zottz.cryptochime.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class SelectAlertTypeFragment extends Fragment {
@@ -34,7 +35,15 @@ public class SelectAlertTypeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_select_alert_type, container, false);
 
         alertTypeListView = view.findViewById(R.id.alert_type_listView);
-        prefAlertTypeCode = this.getActivity().getSharedPreferences("alertTypeCode", Context.MODE_PRIVATE);
+
+        if (getActivity() != null) {
+            prefAlertTypeCode = getActivity().getSharedPreferences("alertTypeCode", Context.MODE_PRIVATE);
+        }
+
+
+        //        prefAlertTypeCode = this.getActivity().getSharedPreferences("alertTypeCode", Context.MODE_PRIVATE); //Old Code
+
+
         alertTypeArrayList = new ArrayList<>();
 
 
@@ -44,7 +53,7 @@ public class SelectAlertTypeFragment extends Fragment {
         alertTypeArrayList.add("1H change is down (%)");
 
         //Initialize Array adapter for spinning list
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, alertTypeArrayList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, alertTypeArrayList);
 
         //Set Adapter to spinning list
         alertTypeListView.setAdapter(adapter);
@@ -59,7 +68,7 @@ public class SelectAlertTypeFragment extends Fragment {
 //                int code = prefAlertTypeCode.getInt("alertTypeCode", 5);
 //                Log.i("AlertCode: ", code+"");
 
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_alert_fragment_container,
+                requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.add_alert_fragment_container,
                         new SetValueFragment()).commit();
             }
         });
